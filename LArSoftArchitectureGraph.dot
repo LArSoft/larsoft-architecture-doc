@@ -1,0 +1,66 @@
+/*
+ * LArSoft architecture graph
+ * 
+ * Date:     November 12, 2015
+ * Author:   Gianluca Petrillo (petrillo@fnal.gov)
+ * Revision: 1.0
+ * 
+ */
+
+digraph "LArSoft Architecture" {
+	graph [dpi=600]
+	
+	// LArSoft components
+	subgraph cluster_LArSoft {
+		label="LArSoft"
+		penwidth=2.0
+		color=red
+		
+		"Detector I/F"
+		"Generator I/F"
+		"Simulation"
+		"Reconstruction"
+		"Analysis"
+		
+		"Event display" [color=orange]
+	}
+	
+	node [shape=box]
+	
+	// the following have the "external product" style
+	"External\ngenerators"
+	"External\nsimulation libraries\n(GEANT)"
+	"Detector"
+	"Data bases"
+	"External\nreconstruction\ntools"
+	"External\nanalysis\ntools"
+	
+	edge [fontcolor=mediumslateblue]
+	
+	"External\ngenerators" -> "Generator I/F" [label="API,\nexchange format"]
+	
+	"Generator I/F" -> "Simulation" [label="simb::\nsim::"]
+	"External\nsimulation libraries\n(GEANT)" -> "Simulation" [label="API"]
+	
+	"Detector" -> "Detector I/F" [label="data"]
+	"Detector I/F" -> "Reconstruction" [label="raw::"]
+	
+	"Data bases" -> "Reconstruction" [label="API"]
+	"Data bases" -> "Simulation" [label="API"]
+	"Simulation" -> "Reconstruction" [label="simb::\nsim::\nraw::"]
+	"Reconstruction" -> "Analysis" [label="recob::\nreco::"]
+	
+	"Analysis" -> "Reconstruction" [style=dashed,label="anab::\nana::"]
+	
+	"External\nreconstruction\ntools" -> "Reconstruction" [label="recob:,reco::\nexchange format"]
+	"Reconstruction" -> "External\nreconstruction\ntools" [label="recob:,reco::\nexchange format"]
+	
+	"Reconstruction" -> "External\nanalysis\ntools" [label="recob::\nreco::"]
+	"Analysis" -> "External\nanalysis\ntools" [label="anab::, ana::\nhistograms, trees..."]
+	
+	"Detector I/F" -> "Event display" [label="raw::", color=orange]
+	"Simulation" -> "Event display" [label="simb::\nsim::", color=orange]
+	"Reconstruction" -> "Event display" [label="recob::", color=orange]
+	"Analysis" -> "Event display" [label="anab::", color=orange]
+	
+} // digraph

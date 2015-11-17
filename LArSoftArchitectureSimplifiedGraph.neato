@@ -1,0 +1,52 @@
+/*
+ * LArSoft architecture graph
+ * 
+ * Date:     November 13, 2015
+ * Author:   Gianluca Petrillo (petrillo@fnal.gov)
+ * Revision: 2.0
+ * 
+ */
+
+graph "LArSoft Architecture" {
+	graph [ dpi = 600 ];
+	
+	// LArSoft components
+	"LArSoft" [label="LArSoft\ntoolkit" shape=ellipse, penwidth=2.0, color=red]
+	
+	node [shape=box]
+	
+	// the following have the "external product" style
+	"External generators" [label="External\ngenerators"]
+	"External simulation libraries" [label="External\nsimulation libraries\n(GEANT)"]
+	"Detector"
+	"Data bases"
+	"External reconstruction tools" [label="External\nreconstruction\ntools"]
+	"External analysis tools" [label="External\nanalysis\ntools"]
+	"Experiment code" [label="Experiment\ncode"]
+	"Framework" [label="art\nframework"]
+	"nutools" [label="nutools"]
+	
+	edge [fontcolor=mediumslateblue len=2]
+	
+	"External generators" -- "LArSoft" [label="API,\nexchange format", dir=forward]
+	
+	"External simulation libraries" -- "LArSoft" [label="API", dir=forward]
+	
+	"Framework" -- "LArSoft" [dir=both, penwidth=2]
+	
+	"Detector" -- "LArSoft" [label="data", dir=forward]
+	
+	"Data bases" -- "LArSoft" [label="API", dir=forward]
+	
+	"External reconstruction tools" -- "LArSoft" [label="recob:, reco::\nexchange format", dir=both]
+	
+	"LArSoft" -- "External analysis tools" [label="recob::, reco::,\nanab::, ana::\nhistograms, trees...", dir=forward]
+	
+	"Experiment code" -- "LArSoft" [label="data\nproducts", dir=both]
+	
+	"nutools" -- "LArSoft" [label="data\nproducts", dir=both]
+	
+	"Framework" -- "nutools" [label="data\nproducts", dir=forward]
+	
+	
+} // graph

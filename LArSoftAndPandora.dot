@@ -1,0 +1,37 @@
+/*
+ * LArSoft architecture graph for interactions with external packages: Pandora
+ * 
+ * File:     LArSoftAndPandora.dot
+ * Date:     November 13, 2015
+ * Author:   Gianluca Petrillo (petrillo@fnal.gov)
+ * Revision: 1.0
+ * 
+ */
+
+digraph "LArSoft/pandora" {
+	graph [dpi=600];
+	
+	node [shape=box]
+	"External library" [label="pandora"]
+	
+	subgraph cluster_LArSoft {
+		label="LArSoft"
+		penwidth=2.0
+		color=red
+		
+		node [shape=ellipse]
+		"Hit finder"
+		"LArPandoraParticleCreator" [label="module derived from\nLArPandoraParticleCreator"]
+		"Reconstruction" [label="More reconstruction\n(e.g. particle ID, calorimetry...)"]
+		
+		"Hit finder" -> "LArPandoraParticleCreator" [label="recob::Hit"]
+		"LArPandoraParticleCreator" -> "Reconstruction" [label="recob::Cluster\nrecob::PFParticle\n..."]
+		
+	} // subgraph
+	
+	edge [fontcolor=mediumslateblue]
+	
+	"LArPandoraParticleCreator":ne -> "External library":nw [label="hits (via API)"]
+	"External library":sw -> "LArPandoraParticleCreator":se [label="particle flow\n(via API)"]
+	
+} // digraph

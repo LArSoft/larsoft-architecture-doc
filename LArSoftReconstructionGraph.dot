@@ -1,0 +1,83 @@
+/*
+ * LArSoft reconstruction architecture graph
+ * 
+ * File:     LArSoftReconstructionGraph.dot
+ * Date:     November 12, 2015
+ * Author:   Gianluca Petrillo (petrillo@fnal.gov)
+ * Revision: 1.0
+ * 
+ */
+
+digraph "LArSoft Reconstruction" {
+	graph [ dpi = 600 ];
+	
+	edge [fontcolor=mediumslateblue]
+	
+	
+	subgraph cluster_LArSoftReconstruction {
+		label="LArSoft reconstruction"
+		penwidth=2.0
+		color=red
+		
+		node [shape=box style="rounded" color=mediumslateblue fontcolor=mediumslateblue]
+		"simulation products" [label="simulated data"]
+		"reconstruction products" [label="reconstructed objects (recob::, reco::)"]
+		
+		subgraph cluster_main_chain {
+			label=""
+			penwidth=0
+			color=transparent
+			node [shape=ellipse]
+			"Detector I/F" [label="Detector\ninterface"]
+			"Calibration" [label="Calibration"]
+			"Hit finding" [label="Hit finding\n(1D)"]
+			"Cluster finding" [label="Cluster finding\n(2D)"]
+			"Track finding" [label="Track finding\n(3D)"]
+			"Shower finding" [label="Shower finding\n(3D)"]
+			"Calorimetry" [label="Calorimetry"]
+			"Particle ID" [label="Particle identification"]
+			
+			"Detector I/F" -> "Calibration" [label="raw::\n(e.g.: raw::RawDigit)"]
+			
+			"Calibration" -> "Hit finding" [label="recob::\n(e.g.: recob::Wire)"]
+			"Hit finding" -> "Cluster finding" [label="recob::\n(e.g.: recob::Hit)"]
+			"Cluster finding" -> "Track finding" [label="recob::\n(e.g.: recob::Cluster)"]
+			"Cluster finding" -> "Shower finding" [label="recob::\n(e.g.: recob::Cluster)"]
+			"Track finding" -> "Calorimetry" [label="recob::\n(e.g.: recob::Track)"]
+			"Shower finding" -> "Calorimetry" [label="recob::\n(e.g.: recob::Shower)"]
+			"Calorimetry" -> "Particle ID"
+		}
+		
+		"simulation products" -> "Calibration" [label="raw::\n(e.g.: raw::RawDigit)"]
+
+		"Hit finding" -> "reconstruction products" [label="recob::\n(e.g.: recob::Hit)"]
+		"Cluster finding" -> "reconstruction products" [label="recob::\n(e.g.: recob::Cluster)"]
+		"Cluster finding" -> "reconstruction products" [label="recob::\n(e.g.: recob::Cluster)"]
+		"Track finding" -> "reconstruction products" [label="recob::\n(e.g.: recob::Track)"]
+		"Shower finding" -> "reconstruction products" [label="recob::\n(e.g.: recob::Shower)"]
+		"Calorimetry" -> "reconstruction products"
+		"Particle ID" -> "reconstruction products"
+		
+	} // subgraph
+	
+	
+	// the following have the "external product" style
+	node [shape=box]
+	"Detector" [label="Detectors"]
+	"External library" [label="External\nreconstruction\nlibraries"]
+	
+	"Detector" -> "Detector I/F" [label="Experiment-\nspecific"]
+	
+	"Data bases" -> "Calibration" [label="API"]
+	"Data bases" -> "Hit finding" [label="API"]
+	"Data bases" -> "Cluster finding" [label="API"]
+	"Data bases" -> "Track finding" [label="API"]
+	"Data bases" -> "Shower finding" [label="API"]
+	
+	"External library":n -> "Calibration" [label="API, exchange format", dir=both]
+	"External library":ne -> "Hit finding" [label="API, exchange format", dir=both]
+	"External library":e -> "Cluster finding" [label="API, exchange format", dir=both]
+	"External library":se -> "Track finding" [label="API, exchange format", dir=both]
+	"External library":s -> "Shower finding" [label="API, exchange format", dir=both]
+	
+} // digraph
