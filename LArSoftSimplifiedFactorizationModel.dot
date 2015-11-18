@@ -48,7 +48,7 @@ digraph "LArSoft -- factorization" {
 	
 	"module1" -> "algorithm1_1" [label="providers,\ndata products", dir=both]
 	
-	"service1" -> "module1" [label="provider", color=purple]
+	"service1" -> "module1" [label="provider(s)", color=purple]
 	
 	"provider1" -> "algorithm1_1" [label="functionality", color=orange, fontcolor=orange]
 	

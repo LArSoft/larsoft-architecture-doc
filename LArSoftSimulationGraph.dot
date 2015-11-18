@@ -20,7 +20,7 @@ digraph "LArSoft Simulation" {
 		color=red
 		
 		node [shape=ellipse]
-		"Event generator I/F" [label="Event generator\ninterface"]
+		"Event generator I/F" [label="Event generator\ninterfaces"]
 		"Internal event generators" [label="Internal\nevent generators"]
 		"Detector physics simulation"
 		"Detector readout simulation"
