@@ -253,3 +253,19 @@ References
 [ref] _libwda_ 
 [ref] HEPEVT format
 
+
+Comments
+=========
+
+Sunday 7:51:39, Ruth Pordes <ruth@fnal.gov> (``Re: First draft of the architecture description document'')
+-----------------------------------------------------------------------------------------------------------
+
+- does the scope include human interfaces as well as software?
+- nutools event display facility and simulation data structures – still does not make sense to me. Is Visualization one special kind of analysis or does Larsoft have specific interfaces to it?
+-  page 4 – can components of the chain be  re-executed during a single pass?-
+-  does event display have a specific meaning  - I’ll include it in the Requirements glossary – it is different from a generalized visualization and I presume the definition should explain this? Also, if the event display is in nutools it is not part of larsoft??? Can we share a glossary in some fashion?
+- Figure 2. You explicitly mean Detector not DAQ ? Does/shoud daq show up somewhere
+-  a Fluka interface is in the works with integration hoped for before the end of Dec. Can you include a sentence on this interface?
+- page 10.Unit test. These are important. These are not the only tests. I don’t see them referred to and perhaps some more specifics might be useful?
+
+
