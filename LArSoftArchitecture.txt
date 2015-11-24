@@ -84,9 +84,11 @@ LArSoft encompasses a collection of tools that can be roughly groups in the foll
 
 ![\label{fig:LArSoftProcessingChain}Components of LArSoft and their interaction with external libraries](LArSoftArchitectureGraph.pdf "LArSoft components and external libraries")
 
-Subsequences of this chain can be also executed, and the chain can be arbitrarily split.
-The typical processing chain (fig. \ref{fig:LArSoftProcessingChain}) includes a reconstruction and an analysis sequence.
+The typical full processing chain (fig. \ref{fig:LArSoftProcessingChain}) includes a reconstruction and an analysis sequence.
 For simulated events, a preliminary simulation sequence can be run. \
+Processing chains are defined by the experiments according to their needs.
+LArSoft inherits the flexibility from the _art_ framework, that provides users with the flexibility of choosing and arranging processing modules at will, with the only limitation that each module must be provided with all the information it needs to operate.
+The same module can also be executed multiple times, with different configurations. \
 The event display is capable of showing many of the data classes from the simulation and reconstruction steps, and it includes a limited ability of running modules with different configuration at run time.
 
 LArSoft also provides an extensible set of data structures describing objects involved in many levels of the physics analysis, e.g., the time-dependent shape of signal from a photon detector, a simulated neutrino or a reconstructed electromagnetic cascade. The use of these common structures is key to flexibility, allowing to replace and directly compare algorithms that use the same data structures.
@@ -133,6 +135,22 @@ During any of these steps the detector and data acquisition parameters can be ac
 Any external library that utilizes LArSoft data classes to receive inputs and deliver results is also fully interchangeable with the algorithms implemented in LArSoft. A noticeable example is the _pandora_ pattern recognition toolkit, that accepts LArSoft hits as input and can present its results in the form of LArSoft clusters, tracks and particle flow objects.
 
 Further common analysis steps are the calibration of the energy deposited in liquid argon by the interacting particles and their identification as specific types (e.g., muons, protons, etc.).
+
+
+Testing
+--------
+
+LArSoft development model allows multiple contributors to modify the code at the same time.
+This model can create conflicts and dysfunction in the code.
+Tests are instrumental to the early detection of such defects.
+LArSoft includes tests at two levels, called _unit tests_ and _integration tests_.
+
+Unit tests exercise a limited part of the system, typically a single algorithm.
+Ideally a unit test for an algorithm should test all the functions of that algorithm. In practice, tests for complex algorithms tend to set up and test a few known typical cases.
+
+Integration tests involve the framework and one or more processing modules.
+These tests can reproduce real user scenarios, for example a part of the official processing chain of an experiment, and they can compare new and historical results.
+LArSoft tools allow these tests to be run at any time, and a standard suite of tests is meant to be automatically and periodically run.
 
 
 
@@ -210,6 +228,9 @@ Other important guidelines for the development of algorithms are:
 * modularity: each algorithm should perform a single task; complex tasks can be performed by hierarchies of algorithms
 * maintainability: they should come with complete documentation and proper tests
 
+Figure \ref{fig:AlgorithmModel} shows that if algorithms are not framework-dependent, their unit test can also be framework-independent.
+Therefore, not only those algorithms can be developed in a simplified, framework-unaware environment, but they can also be tested in that same development environment. In other words, the full development cycle, of which testing is an integral part, can seamlessly happen in the same environment.
+
 
 External libraries
 -------------------
@@ -243,15 +264,23 @@ for example to ensure that a consistent geometry was used for the information (r
 References
 ===========
 
-[ref] _art_ framework
-[ref] FHiCL language
-[ref] message facility
-[ref] _nutools_
-[ref] CRY
-[ref] GENIE
-[ref] GEANT4
-[ref] _libwda_ 
-[ref] HEPEVT format
+_[ref]_ _art_ framework
+
+_[ref]_ FHiCL language
+
+_[ref]_ message facility
+
+_[ref]_ _nutools_
+
+_[ref]_ CRY
+
+_[ref]_ GENIE
+
+_[ref]_ GEANT4
+
+_[ref]_ _libwda_ 
+
+_[ref]_ HEPEVT format
 
 
 Comments
@@ -260,12 +289,33 @@ Comments
 Sunday 7:51:39, Ruth Pordes <ruth@fnal.gov> (``Re: First draft of the architecture description document'')
 -----------------------------------------------------------------------------------------------------------
 
-- does the scope include human interfaces as well as software?
-- nutools event display facility and simulation data structures – still does not make sense to me. Is Visualization one special kind of analysis or does Larsoft have specific interfaces to it?
--  page 4 – can components of the chain be  re-executed during a single pass?-
--  does event display have a specific meaning  - I’ll include it in the Requirements glossary – it is different from a generalized visualization and I presume the definition should explain this? Also, if the event display is in nutools it is not part of larsoft??? Can we share a glossary in some fashion?
-- Figure 2. You explicitly mean Detector not DAQ ? Does/shoud daq show up somewhere
--  a Fluka interface is in the works with integration hoped for before the end of Dec. Can you include a sentence on this interface?
-- page 10.Unit test. These are important. These are not the only tests. I don’t see them referred to and perhaps some more specifics might be useful?
+*[Q 001]* does the scope include human interfaces as well as software?
+\
+*[A 001.1]* _[GP]_ I thought mostly not, but I am not completely sure what human interface includes. To be clarified. *(TODO)*
+
+*[Q 002]* nutools event display facility and simulation data structures – still does not make sense to me. Is Visualization one special kind of analysis or does Larsoft have specific interfaces to it?
+\
+*[A 002.1]* _[GP]_ Visualization is a special kind of analysis. But our event display crosses the border with its (limited) ability to _interactively_ reprocess the input.
+
+*[Q 003]* page 4 – can components of the chain be  re-executed during a single pass?-
+\
+*[A 003.1]* _[GP]_ I have added a couple of sentences in the previous-to-last paragraph of Architecture > Overview section, that I hope give an answer. The answer is very much in the features of art, that I have not covered at all in this text. Should we? *(TODO)*
+
+*[Q 004]*  does event display have a specific meaning  - I’ll include it in the Requirements glossary – it is different from a generalized visualization and I presume the definition should explain this? Also, if the event display is in nutools it is not part of larsoft??? Can we share a glossary in some fashion?
+\
+*[A 004.1]* _[GP]_ 
+
+*[Q 005]*  Figure 2. You explicitly mean Detector not DAQ ? Does/shoud daq show up somewhere
+\
+*[A 005.1]* _[GP]_ in practice DAQ products is what we communicate with. It doesn't have to be only that, but I guess that is it effectively what happens. *(TODO)*
+
+*[Q 006]*   a Fluka interface is in the works with integration hoped for before the end of Dec. Can you include a sentence on this interface?
+\
+*[A 006.1]* _[GP]_ Erica, confirm? *(TODO)*
+
+*[Q 007]*  page 10.Unit test. These are important. These are not the only tests. I don’t see them referred to and perhaps some more specifics might be useful?
+\
+*[A 007.1]* _[GP]_ I added a section about testing. I have added a few words also at the point Ruth specified (at the end of "User code" section). I think it would be good to add a "test" block in one of the high-level diagrams, but I can't figure out where (probably in \ref{fig:LArSoftProcessingChain}, but how?).
+Or maybe we have to add a _development model_ section?
 
 
