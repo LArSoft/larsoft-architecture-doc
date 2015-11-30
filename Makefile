@@ -51,7 +51,7 @@ $(IMAGEFORMATS:=.pics): %.pics: $(IMAGES:=.%)
 
 pics: $(IMAGEFORMATS:%=%.pics)
 
-%.clean: %.cleanpics
+%.clean: cleanpics
 	$(RM) "$(*).log" "$(*).aux"
 
 %.cleanpics:
