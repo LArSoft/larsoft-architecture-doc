@@ -1,0 +1,45 @@
+% \section{Overview}
+% \label{sec:Overview}
+
+The LArSoft toolkit aims to offer a solution for the typical data analysis scenarios
+of an experiment based on a Liquid Argon TPC detector:
+\begin{itemize}
+  \item generation of physics pseudo-events
+  \item simulation of physics processes in the detectors
+  \item simulation of the readout response
+  \item reconstruction of low and high level physics objects
+  \item analysis and presentation of collected data
+  \item graphical display of physics events
+\end{itemize}
+
+As an example, suppose a scientist may want to develop a new clustering algorithm
+optimized for a certain type of physics events.
+LArSoft offers interface to generators to produce either simplified physics events
+or more realistic ones that include, for example, cosmic radiation.
+It also provides the simulation of those events in the specific experiment detector.
+If the target processes are common enough, the experiment might have already
+executed these steps on large scale, also using LArSoft, and provided the necessary input.
+The scientist is then presented with standard interfaces to access geometry and detector
+information, and standard data structure to start the reconstruction with,
+including single wire hits suitable as starting point for a clustering algorithm,
+and to store the results into.
+She (or he) can use the standard framework environment to write an algorithm class
+and its framework module, compile it and test it immediately on simulated data.
+The result, in a standard LArSoft structure, can be immediately visualized in a
+event display, and improvement made to the code.
+Depending on the algorithm, the time between a code change and the
+visualization of its effect may take less than one minute.
+Finally, replacing the input with actual detector data, that uses the same format
+as the simulation, she will immediately see the performance in the real case.
+
+As a different example, a scientist may want to compare two different algorithms
+analyzing reconstructed tracks.
+After the tracks are produced, either running the track reconstruction algorithm
+on simulated or real data, he (or she) will write one or more analysis algorithms
+and their framework modules to produce the necessary plots.
+
+Since LArSoft has been designed to take advantage of the \ART framework\cite{ART},
+LArSoft users will extensively work with its concepts,
+including for example services and modules, and infrastructure, like \ART scripts
+to create skeleton modules, and the configuration based on FHiCL language\cite{FHiCL}.
+

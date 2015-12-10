@@ -1,78 +1,55 @@
+###############################################################################
 #
-# Makefile for LArSoft architecture document
+# Manages the production of output from LaTeX sources
+# using latexmk .
 #
-# Currently compiles from a text file using pandoc
-#
 
-#######################################################################
-TARGETS:=LArSoftArchitecture
+###############################################################################
+### Directories
+###
+SrcDir:=sources/
+TmpDir:=tmp/
+OutDir:=output/
 
-FORMATS:=pdf html textile # tex odt doc
+###############################################################################
 
-IMAGEFORMATS:=pdf png
-IMAGESOURCEFORMATS=dot neato
-IMAGES:=$(foreach Format,$(IMAGESOURCEFORMATS),$(patsubst %.$(Format),%,$(wildcard *.$(Format))))
+TARGETS=LArSoftArchitecture
 
-#######################################################################
-### program paths
-PANDOC:=pandoc
-PANDOCOPT:=--standalone --table-of-contents
+###############################################################################
+### Program paths
+###
+LATEXMK:=latexmk
 
-#######################################################################
-### Supporting variables
+LATEXMK_BASEOPT=--recorder --outdir="$(OutDir)"
 
-ALLIMAGES:=$(foreach Format,$(IMAGEFORMATS),$(IMAGES:%=%.$(Format)))
+TEXINPUTS+=classes/:sources/:
 
-#######################################################################
-.PHONY: all $(FORMATS) pics debug clean distclean cleanpics # $(IMAGEFORMATS:%=%.pics)
+###############################################################################
+### Targets
+###
 
-all: $(FORMATS) pics
+.PHONY: all pdf html clean distclean preview FORCE
 
-# this is getting complicate...
-# there are multiple targets here; for each of the FORMATS,
-# the rule is that to make it (plain) we need all targets with that format;
-# so "pdf" will become $(TARGETS:=.pdf); it would be like % : $(TARGETS:=.$(@)),
-# but the substitution of $@ does not work in this context
-$(FORMATS) : % : $(TARGETS:=.%)
+all: pdf
 
-clean: $(TARGETS:=.clean) cleanpics
+pdf: $(TARGETS:%=$(OutDir)%.pdf)
 
-distclean: $(TARGETS:=.distclean) cleanpics
+clean: $(TARGETS:%=%.clean)
+	$(RM) "$(TmpDir)"*
 
-cleanpics:
-	$(RM) $(ALLIMAGES)
+distclean: $(TARGETS:%=%.distclean)
 
-# this is getting even more complicate...
-# there are multiple targets here; for each of the FORMATS, build a %.ext target
-$(FORMATS:%=\%.%) : %.txt pics
-	$(PANDOC) $(PANDOCOPT) -o "$@" "$<"
+%.distclean:
+	$(LATEXMK) -C $(LATEXMK_BASEOPT) "$(SrcDir)/$(*).tex"
+	$(RM) "$(OutDir)$(*).pdf"
 
-$(IMAGEFORMATS:=.pics): %.pics: $(IMAGES:=.%)
+%.clean:
+	$(LATEXMK) -c $(LATEXMK_BASEOPT) "$(SrcDir)/$(*).tex"
 
-pics: $(IMAGEFORMATS:%=%.pics)
+$(OutDir)%.pdf: FORCE
+	$(LATEXMK) $(LATEXMK_BASEOPT) --pdf "$(SrcDir)/$(*).tex"
 
-%.clean: cleanpics
-	$(RM) "$(*).log" "$(*).aux"
-
-%.cleanpics:
-	$(RM) $(IMAGES:=.$(*))
-
-%.distclean: %.clean
-	$(RM) $(FORMATS:%=$(*).%)
-
-%.pdf: %.dot
-	dot -Tpdf -o"$@" "$<"
-
-%.png: %.dot
-	dot -Tpng -o"$@" "$<"
-
-%.pdf: %.neato
-	neato -Tpdf -o"$@" "$<"
-
-%.png: %.neato
-	neato -Tpng -o"$@" "$<"
-
-LArSoftArchitecture.pdf: pdf.pics
+FORCE:
 
 debug:
-	@echo "Images: $(IMAGES)"
+	@echo "Targets: $(TARGETS)"

@@ -1,0 +1,61 @@
+% \section{Logical view: components}
+% \label{sec:Components}
+
+To provide the best solutions for LAr TPC simulation, reconstruction and
+analysis of data, LArSoft provides a collection of built in tools and
+algorithms, but also interfaces to other existing libraries.
+\Cref{fig:LArSoftRelations} illustrates the relation between LArSoft and
+these libraries.
+
+\begin{figure}
+	\includegraphics[width=\textwidth]{figures/LArSoftArchitectureSimplifiedGraph}
+	\caption{\label{fig:LArSoftRelations}
+		Relationship between LArSoft and other packages and libraries
+	}
+\end{figure}
+
+LArSoft is designed to rely on the \ART framework~\cite{ART}.
+This framework provides an event data model, centralized configuration, data
+and configuration persistency, management of user algorithm through
+``modules'', exception handling, and more. LArSoft takes advantage of
+the libraries \ART framework depends on, by using them directly:
+
+\begin{itemize}
+\item
+  FHiCL language~\cite{FHiCL} to propagate the configuration to its
+  components
+\item
+  message facility~\cite{MessageFacility} to regulate text output to console
+\item
+  CLHEP, ROOT, Boost libraries as needed
+\end{itemize}
+
+LArSoft also shares a common platform, \emph{nutools}~\cite{nutools}, with
+other neutrino experiments (\NOvA). This library provides LArSoft with
+some basic event display facilities and simulation data structures.
+
+LArSoft interactions include:
+
+\begin{itemize}
+\item
+  experiment detector data, through customized input modules converting
+  data into LArSoft data classes
+\item
+  external event generators (e.g., CRY~\cite{CRY}, GENIE~\cite{GENIE}, via
+  API or through HEPEVT exchange format; additional event generators are
+  natively implemented in LArSoft
+\item
+  GEANT~\cite{GEANT}, an external detector simulation library
+\item
+  data bases, via direct connection or web proxy (\emph{libwda}~\cite{libwda})
+\item
+  external reconstruction tools (e.g., \emph{pandora}~\cite{pandora}), through a
+  LArSoft interface
+\item
+  custom analysis tools, that can use LArSoft data classes directly or
+  tailored data formats produced by custom LArSoft modules
+\item
+  experiment code, written in the form of LArSoft algorithms, modules
+  and services
+\end{itemize}
+
