@@ -1,0 +1,59 @@
+% \section*{Comments}
+% \label{comments}
+
+
+\subsection*{\texorpdfstring{Sunday 7:51:39, Ruth Pordes
+\href{mailto:ruth@fnal.gov}{\nolinkurl{ruth@fnal.gov}} (``Re: First
+draft of the architecture description
+document'')}{Sunday 7:51:39, Ruth Pordes ruth@fnal.gov (``Re: First draft of the architecture description document'')}}\label{sunday-75139-ruth-pordes-ruthfnal.gov-re-first-draft-of-the-architecture-description-document}
+
+\emph{{[}Q 001{]}} does the scope include human interfaces as well as
+software?\\
+\emph{{[}A 001.1{]}} \emph{{[}GP{]}} I thought mostly not, but I am not
+completely sure what human interface includes. To be clarified.
+\emph{(TODO)}
+
+\emph{{[}Q 002{]}} nutools event display facility and simulation data
+structures -- still does not make sense to me. Is Visualization one
+special kind of analysis or does Larsoft have specific interfaces to
+it?\\
+\emph{{[}A 002.1{]}} \emph{{[}GP{]}} Visualization is a special kind of
+analysis. But our event display crosses the border with its (limited)
+ability to \emph{interactively} reprocess the input.
+
+\emph{{[}Q 003{]}} page 4 -- can components of the chain be re-executed
+during a single pass?-\\
+\emph{{[}A 003.1{]}} \emph{{[}GP{]}} I have added a couple of sentences
+in the previous-to-last paragraph of Architecture \textgreater{}
+Overview section, that I hope give an answer. The answer is very much in
+the features of art, that I have not covered at all in this text. Should
+we? \emph{(TODO)}
+
+\emph{{[}Q 004{]}} does event display have a specific meaning - I'll
+include it in the Requirements glossary -- it is different from a
+generalized visualization and I presume the definition should explain
+this? Also, if the event display is in nutools it is not part of
+larsoft??? Can we share a glossary in some fashion?\\
+\emph{{[}A 004.1{]}} \emph{{[}GP{]}}
+
+\emph{{[}Q 005{]}} Figure 2. You explicitly mean Detector not DAQ ?
+Does/shoud daq show up somewhere\\
+\emph{{[}A 005.1{]}} \emph{{[}GP{]}} in practice DAQ products is what we
+communicate with. It doesn't have to be only that, but I guess that is
+it effectively what happens. \emph{(TODO)}
+
+\emph{{[}Q 006{]}} a Fluka interface is in the works with integration
+hoped for before the end of Dec. Can you include a sentence on this
+interface?\\
+\emph{{[}A 006.1{]}} \emph{{[}GP{]}} Erica, confirm? \emph{(TODO)}
+
+\emph{{[}Q 007{]}} page 10.Unit test. These are important. These are not
+the only tests. I don't see them referred to and perhaps some more
+specifics might be useful?\\
+\emph{{[}A 007.1{]}} \emph{{[}GP{]}} I added a section about testing. I
+have added a few words also at the point Ruth specified (at the end of
+``User code'' section). I think it would be good to add a ``test'' block
+in one of the high-level diagrams, but I can't figure out where
+(probably in \ref{fig:LArSoftProcessingChain}, but how?). Or maybe we
+have to add a \emph{development model} section?
+
