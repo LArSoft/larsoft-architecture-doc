@@ -1,0 +1,49 @@
+digraph LArSoftAndLibraries {
+  
+  rankdir = RL
+  dpi = 1200
+  
+  node [ shape=box ]
+  edge [ color=purple ]
+  
+  "LArSoft"    [label="LArSoft\ntoolkit" shape=ellipse, penwidth=2.0, color=orange, fontcolor=orange]
+  
+  
+  subgraph cluster_development {
+    style     = dashed
+    color     = purple
+    fontcolor = purple
+    fontsize  = 8
+    label     = "third-party libraries"
+    
+    node [
+      fontsize  = 10
+      shape     = box
+      color     = purple
+      fontcolor = purple
+    ]
+    edge [
+      color     = purple
+    ]
+    
+    "LibraryDatabase"           [label="database",             ]
+    "LibraryPhysics"            [label="physics\nlibraries",   ]
+    "Framework"                 [label="framework",            ]
+    "LibraryEventGeneration"    [label="event\ngeneration",    ]
+    "LibraryDetectorSimulation" [label="detector\nsimulation", ]
+    "LibraryPatternRecognition" [label="pattern\nrecognition", ]
+    "LibraryDataAnalysis"       [label="data analysis",        ]
+    "LibraryVisualization"      [label="visualization",        ]
+    
+  } // subgraph cluster_development
+  
+  "LArSoft" -> "LibraryDatabase"           [dir=none]
+  "LArSoft" -> "LibraryPhysics"            [dir=none]
+  "LArSoft" -> "Framework"                 [dir=none]
+  "LArSoft" -> "LibraryEventGeneration"    [dir=none]
+  "LArSoft" -> "LibraryDetectorSimulation" [dir=none]
+  "LArSoft" -> "LibraryPatternRecognition" [dir=none]
+  "LArSoft" -> "LibraryDataAnalysis"       [dir=none]
+  "LArSoft" -> "LibraryVisualization"      [dir=none]
+
+} // LArSoftAndLibraries

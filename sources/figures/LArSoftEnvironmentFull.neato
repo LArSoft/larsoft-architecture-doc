@@ -1,0 +1,112 @@
+graph LArSoftEnvironment {
+  
+  dpi = 1200
+  
+  overlap = false
+//  sep = 2.0
+  
+  node [shape=box]
+  
+  "LArSoft"    [label="LArSoft\ntoolkit" shape=ellipse, penwidth=3.0, color=orange, fontcolor=orange, fontsize=16]
+  
+  
+  subgraph experiment {
+    
+    node [
+      shape     = box
+      color     = forestgreen
+      fontcolor = forestgreen
+    ]
+    edge [
+      color     = forestgreen
+    ]
+    
+    "Experiment"  [label="experiment-specific\nsoftware",      style=rounded, penwidth=2.0,  fontsize=12]
+    
+    node [ fontsize=9 ]
+    
+    "ExperimentGeometry"      [label="detector\ngeometry",   ]
+    "ExperimentConditions"    [label="detector\nconditions", ]
+    "ExperimentData"          [label="data\nacquisition",    ]
+    "ExperimentServices"      [label="services",             ]
+    "ExperimentAlgorithms"    [label="algorithms",           ]
+    "ExperimentConfiguration" [label="job\nconfiguration",   ]
+    "ExperimentWorkFlow"      [label="workflows",            ]
+    
+    "Experiment" -- "ExperimentGeometry"
+    "Experiment" -- "ExperimentConditions"
+    "Experiment" -- "ExperimentData"
+    "Experiment" -- "ExperimentServices"
+    "Experiment" -- "ExperimentAlgorithms"
+    "Experiment" -- "ExperimentConfiguration"
+    "Experiment" -- "ExperimentWorkFlow"
+    
+  } // subgraph experiment
+  
+  subgraph development {
+    
+    node [
+      shape     = box
+      color     = red
+      fontcolor = red
+    ]
+    edge [
+      color     = red
+    ]
+    
+    "Development" [label="development & run-time\nenvironment", style=rounded, penwidth=2.0, fontsize=12]
+    
+    node [ fontsize=9 ]
+    
+    "DevelopmentRepositories" [label="repositories",  ]
+    "DevelopmentBuild"        [label="build\nsystem", ]
+    "DevelopmentTest"         [label="testing",       ]
+    "DevelopmentPackaging"    [label="packaging",     ]
+    
+    "Development" -- "DevelopmentRepositories"
+    "Development" -- "DevelopmentBuild"
+    "Development" -- "DevelopmentTest"
+    "Development" -- "DevelopmentPackaging"
+    
+  } // subgraph development
+  
+  subgraph libraries {
+    
+    node [
+      shape     = box
+      color     = purple
+      fontcolor = purple
+    ]
+    edge [
+      color     = purple
+    ]
+    
+    "Libraries"   [label="third-party libraries", style=rounded, penwidth=2.0, fontsize=12]
+    
+    node [ fontsize=9 ]
+    
+    "LibraryDatabase"           [label="database",             ]
+    "LibraryPhysics"            [label="physics\nlibraries",   ]
+    "Framework"                 [label="framework",            ]
+    "LibraryEventGeneration"    [label="event\ngeneration",    ]
+    "LibraryDetectorSimulation" [label="detector\nsimulation", ]
+    "LibraryPatternRecognition" [label="pattern\nrecognition", ]
+    "LibraryDataAnalysis"       [label="data analysis",        ]
+    "LibraryVisualization"      [label="visualization",        ]
+    
+    "Libraries" -- "LibraryDatabase"
+    "Libraries" -- "LibraryPhysics"
+    "Libraries" -- "Framework"
+    "Libraries" -- "LibraryEventGeneration"
+    "Libraries" -- "LibraryDetectorSimulation"
+    "Libraries" -- "LibraryPatternRecognition"
+    "Libraries" -- "LibraryDataAnalysis"
+    "Libraries" -- "LibraryVisualization"
+    
+  } // subgraph libraries
+  
+  LArSoft -- "Experiment"  [color=orange]
+  LArSoft -- "Development" [color=orange]
+  LArSoft -- "Libraries"   [color=orange]
+  
+}

@@ -1,0 +1,25 @@
+graph LArSoftEnvironment {
+  
+  dpi = 1200
+  
+  overlap = scale
+  
+  node [shape=box]
+  
+  "LArSoft"    [label="LArSoft\ntoolkit" shape=ellipse, penwidth=2.0, color=orange, fontcolor=orange, fontsize=16]
+  
+  node [
+    shape    = box
+    style    = rounded
+    fontsize = 12
+  ]
+  
+  "Experiment"  [label="experiment-specific\nsoftware",       color=forestgreen, fontcolor=forestgreen]
+  "Development" [label="development & run-time\nenvironment", color=red,         fontcolor=red        ]
+  "Libraries"   [label="third-party libraries",               color=purple,      fontcolor=purple     ]
+  
+  LArSoft -- "Experiment"  [color=orange, color=forestgreen]
+  LArSoft -- "Development" [color=orange, color=red]
+  LArSoft -- "Libraries"   [color=orange, color=purple]
+  
+}
