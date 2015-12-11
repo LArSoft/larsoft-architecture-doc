@@ -75,3 +75,7 @@ FORCE:
 debug:
 	@echo "Targets: $(TARGETS)"
 	@echo "Figures: $(FIGURES)"
+
+latexdep:
+	@echo "An incomplete list of packaged used by this document:"
+	@find -name "*.sty" -or -name "*.cls" -or -name "*.tex" | xargs grep -h -F '\usepackage' | sed -e 's/.*\usepackage *\(\[.*\]\)\? *{\(.*\)}.*/\2/' | grep -v usepackage | sort -u
