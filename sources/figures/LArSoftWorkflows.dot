@@ -1,0 +1,15 @@
+digraph LArSoftWorkflows {
+  
+  rankdir = LR
+  dpi = 1200
+  
+  node [ shape=box ]
+  
+  "Simulation"     [ label="Simulation" ]
+  "Reconstruction" [ label="Reconstruction" ]
+  "Analysis"       [ label="Analysis" ]
+  
+  "Simulation"     -> "Reconstruction"
+  "Reconstruction" -> "Analysis"
+  
+} // LArSoftWorkflows

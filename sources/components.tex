@@ -24,7 +24,7 @@ Physics developers typically rely on copious libraries providing general or phys
 (\cref{fig:LArSoftRelations:Libraries}).
 LArSoft already offers:
 \begin{itemize}
-	\item a framework, based on \ART~\cite{ART}, providing essential functionalities
+	\item access to a framework, \ART~\cite{ART}, providing essential functionalities
 		including an event data model, an event loop, workflow definition and control,
 		plug-in of code, distribution and tracking of job configuration,
 		serialization of the results, and more
@@ -89,5 +89,33 @@ The \UPS~\cite{UPS} distribution system ensures that the same consistency is pre
 Infrastructure for automatic execution of user tests is also provided,
 together with a growing number of tests exercising parts of LArSoft tools.
 
+
+
+\subsection{Internal components}
+\label{ssec:Components}
+
+Most of LArSoft offer can be collected into some broad functional categories.
+Some of them are well established, while others are being developed now or have been just designed.
+The following list touches the main ones, without being exhaustive:
+\begin{itemize}
+	\item physical constants
+	\item helpers for common framework usage patterns (\eg, creation of asociations between data products)
+	\item detector geometry description
+	\item persistent data structures (``data products'')
+	\item detector information services: liquid argon and detector properties, detector clocks, readout channel quality
+	\item calibration services: readout channel pedestals
+	\item physics event generation
+	\item detector simulation: TPC and optical detectors
+	\item readout simulation: template modules for TPC and optical detectors
+	\item simulation of optical triggers
+	\item calibration: template modules, description of residual electric charge in TPC volume
+	\item object reconstruction: 1D (TPC wire hits, optical hits), 2D (TPC hit clusters), 3D (tracks, showers, vertices) and time (optical flashes)
+	\item TPC hit simulation and correlation between reconstructed objects and generated particles
+	\item energy and momentum reconstruction (``calorimetry'')
+	\item particle identification
+	\item global event reconstruction
+	\item graphical display of generated and reconstructed objects (``event display'')
+	\item analyser module example
+\end{itemize}
 
 
