@@ -24,6 +24,8 @@ LATEXMK_BASEOPT=--recorder --outdir="$(OutDir)"
 
 TEXINPUTS+=classes/:sources/:
 
+LATEXMKCMD=TEXINPUTS="$(TEXINPUTS)" $(LATEXMK)
+
 ###############################################################################
 ### Targets
 ###
@@ -40,14 +42,14 @@ clean: $(TARGETS:%=%.clean)
 distclean: $(TARGETS:%=%.distclean)
 
 %.distclean:
-	$(LATEXMK) -C $(LATEXMK_BASEOPT) "$(SrcDir)/$(*).tex"
+	$(LATEXMKCMD) -C $(LATEXMK_BASEOPT) "$(SrcDir)/$(*).tex"
 	$(RM) "$(OutDir)$(*).pdf"
 
 %.clean:
-	$(LATEXMK) -c $(LATEXMK_BASEOPT) "$(SrcDir)/$(*).tex"
+	$(LATEXMKCMD) -c $(LATEXMK_BASEOPT) "$(SrcDir)/$(*).tex"
 
 $(OutDir)%.pdf: FORCE
-	$(LATEXMK) $(LATEXMK_BASEOPT) --pdf "$(SrcDir)/$(*).tex"
+	$(LATEXMKCMD) $(LATEXMK_BASEOPT) --pdf "$(SrcDir)/$(*).tex"
 
 FORCE:
 
