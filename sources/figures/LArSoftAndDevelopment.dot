@@ -1,0 +1,42 @@
+digraph LArSoftAndDevelopment {
+  
+  rankdir = TB
+  dpi = 1200
+  
+  node [ shape=box ]
+  edge [ color=red ]
+  
+  "LArSoft"    [label="LArSoft\ntoolkit" shape=ellipse, penwidth=2.0, color=orange, fontcolor=orange]
+  
+  
+  subgraph cluster_development {
+    style     = dashed
+    color     = red
+    fontcolor = red
+    fontsize  = 8
+    label     = "development & run-time environment"
+    labelloc  = "b"
+    
+    node [
+      fontsize  = 10
+      shape     = box
+      color     = red
+      fontcolor = red
+    ]
+    edge [
+      color     = red
+    ]
+    
+    "DevelopmentRepositories" [label="repositories",  ]
+    "DevelopmentBuild"        [label="build\nsystem", ]
+    "DevelopmentTest"         [label="testing",       ]
+    "DevelopmentPackaging"    [label="packaging",     ]
+    
+  } // subgraph cluster_development
+  
+  "LArSoft" -> "DevelopmentRepositories" [dir=none]
+  "LArSoft" -> "DevelopmentBuild"        [dir=none]
+  "LArSoft" -> "DevelopmentTest"         [dir=none]
+  "LArSoft" -> "DevelopmentPackaging"    [dir=none]
+  
+} // LArSoftAndDevelopment

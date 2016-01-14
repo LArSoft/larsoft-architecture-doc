@@ -1,3 +1,40 @@
 % \section{Deployment view: repositories and packages}
 % \label{sec:Repositories}
 
+LArSoft supports the use of the UNIX Product Support (\UPS) system
+for deployment of LArSoft itself and of the additional software it depends from.
+This system is organized in \emph{products} containing executable code for a specific platform
+and auxiliary data as needed.
+LArSoft set up demands from UPS a specific version of almost every library LArSoft depends on,
+including for example the GNU compiler, Boost libraries and CERN ROOT.
+
+LArSoft code base is organized in \emph{repositories} grouping different functionalities.
+The current list of repositories is:
+\begin{description}
+   \item[larcore] independent of data products (\eg geometry description)
+   \item[lardata] defining the shared data products
+   \item[larevt] code independent of simulation and reconstruction algorithms (\eg calibration, database access)
+   \item[larsim] detector simulation
+   \item[larreco] physics object reconstruction
+   \item[larana] depending on simulation or reconstruction algorithms (\eg particle identification, calorimetry)
+   \item[larpandora] interface with pattern recognition package \Pandora
+   \item[lareventdisplay] ROOT-based visualization tool
+   \item[larexample] examples of LArSoft modules
+   \item[larsoft] ``umbrella'' product
+\end{description}
+LArSoft repositories are maintained in Fermilab Redmine as \git repositories.
+
+
+\subsection{Local LArSoft installation}
+\label{ssec:Repositories:LocalInstallation}
+
+LArSoft can be installed in any supported platform, either with:
+\begin{description}
+   \item[binary installation] copying prebuilt UPS products from Fermilab server
+      into a local UPS directory
+   \item[source installation] copying, building and installing into a local UPS directory
+      the source code of each and every dependent package
+\end{description}
+Both installation patterns are supported via a single script.
+In this way, LArSoft can be installed in virtual machines, personal computers
+as well as in computing clusters.

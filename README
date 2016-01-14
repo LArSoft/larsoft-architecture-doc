@@ -1,0 +1,16 @@
+LArSoft architecture document
+==============================
+
+A rendering is available in the output directory:
+
+output/LArSoftArchitecture.pdf
+
+To regenerate a current PDF, simply run:
+
+make pdf
+
+(no other format is currently supported...).
+There are a number of requirements, including a working distribution of LaTeX,
+graphviz, latexmk and a bunch of LaTeX packages (`make latexdep` approximates
+that list).
+

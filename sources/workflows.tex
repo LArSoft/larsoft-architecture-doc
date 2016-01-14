@@ -1,126 +1,111 @@
 % \section{Process view: workflows}
 % \label{sec:Workflows}
 
-LArSoft encompasses a collection of tools that can be roughly groups in
-the following categories:
-
+LArSoft's tools can be sequenced and combined to compound complete workflows.
+The typical usage is aligned to three main types of ``standard'' workflows (\cref{fig:LArSoftProcessingChain}):
 \begin{enumerate}
   \item simulation
   \item reconstruction
   \item analysis
-  \item[\textbullet] display
 \end{enumerate}
+where the first step, simulation, is of course skipped when processing real detector data.
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{figures/LArSoftWorkflows.pdf}
+  \caption{\label{fig:LArSoftProcessingChain}Typical workflow sequence in liquid argon TPC analysis. Each block represents a workflow.}
+\end{figure}
+LArSoft does not directly define these processing chains.
+Rather, it inherits the flexibility from the \emph{art} framework,
+which provides users with the flexibility of choosing and arranging
+processing modules at will. %, with the only limitation that each module
+% must be provided with all the information it needs to operate.
+A module can also be executed multiple times, with different configurations.\\
+Thus, the Experiments define the steps of each workflow according to their
+needs.
+Still, these needs are fairly shared,
+and it is possible to characterize a ``typical'' chain for each workflow.
+
+
+\subsection{Simulation workflow}
+\label{ssec:Workflows:Simulation}
+
+The purpose of a simulation workflow is to describe a realistic response of
+the detectors to a known physics event (``truth'').
+Since the result of the simulation should be equivalent to the output of the detectors,
+this result is represented by the same data classes.
+
+The main results of this workflow are:
+\begin{itemize}
+	\item data products representing the detector response (\eg \ClassName{raw::RawDigit} and \ClassName{raw::OpDetWaveform})
+	\item data products representing the simulated physics (\eg \ClassName{simb::MCTruth}, \ClassName{simb::MCParticle}
+\end{itemize}
 
 \begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{figures/LArSoftArchitectureGraph.pdf}
-\caption{\label{fig:LArSoftProcessingChain}Components of LArSoft and
-their interaction with external libraries}
+  \centering
+  \includegraphics[width=\textwidth]{figures/LArSoftSimulationGraph.pdf}
+  \caption{\label{fig:LArSoftSimulation}A typical LArSoft simulation workflow.}
 \end{figure}
-
-The typical full processing chain (\cref{fig:LArSoftProcessingChain})
-includes a reconstruction and an
-analysis sequence. For simulated events, a preliminary simulation
-sequence can be run.\\
-Processing chains are defined by the experiments according to their
-needs. LArSoft inherits the flexibility from the \emph{art} framework,
-that provides users with the flexibility of choosing and arranging
-processing modules at will, with the only limitation that each module
-must be provided with all the information it needs to operate. The same
-module can also be executed multiple times, with different
-configurations.\\
-The event display is capable of showing many of the data classes from
-the simulation and reconstruction steps, and it includes a limited
-ability of running modules with different configuration at run time.
-
-LArSoft also provides an extensible set of data structures describing
-objects involved in many levels of the physics analysis, e.g., the
-time-dependent shape of signal from a photon detector, a simulated
-neutrino or a reconstructed electromagnetic cascade. The use of these
-common structures is key to flexibility, allowing to replace and
-directly compare algorithms that use the same data structures.
-
-\subsection{Simulation}\label{simulation}
-
-The purpose of LArSoft simulation is to describe a realistic response of
-the detectors to a known physics event (``truth''). Since the result of
-the simulation should be equivalent to the output of the detectors, this
-result is represented by the same data classes. The truth information,
-not available from the detector, is produced and stored in additional
-structures.
-
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{figures/LArSoftSimulationGraph.pdf}
-\caption{\label{fig:LArSoftsimulation}LArSoft simulation flow}
-\end{figure}
-
-The complete simulation chain is summarized in fig.
-\ref{fig:LArSoftsimulation}. The process is typically described as three
-steps:
-
+The complete simulation chain is summarized in \cref{fig:LArSoftSimulation}.
+The process is typically divided in three steps:
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  event generation
-\item
-  detector physics simulation
-\item
-  detector readout simulation
+   \item event generation
+   \item detector physics simulation
+   \item detector readout simulation
+      \begin{itemize}
+         \item TPC: signal on the wires
+         \item optical detector
+         \item ``auxiliary'' detectors (\eg scintillator pads)
+      \end{itemize}
 \end{enumerate}
 
 The physics event can be generated by an external program or library.
-LArSoft interfaces directly to GENIE generator (neutrino interactions)
-and CRY (cosmic rays). It can also read a generic HEPEVT{[}ref{]}
-format. In addition, LArSoft provides built-in generators to simulate
-single particles, Argon nucleus decays, and more.
+LArSoft currently interfaces directly to GENIE generator (neutrino interactions)
+and CRY (cosmic rays). It can also read a generic HEPEVT\cite{HEPEVT} format.
+In addition, LArSoft provides built-in generators to simulate single particles,
+Argon nucleus decays, and more.
 
 The detector physics simulation includes the interaction of the
 generated particles with the detector, and the propagation to the
 readout of produced photons and electrons. This part of the simulation
 relies on GEANT4 for the interaction of particles with matter. Photon
 and electron transportation to the readout are implemented in built-in
-code. Detector parameters (e.g., the intensity of the electric field)
+code. Detector parameters (\eg, the intensity of the electric field)
 can be acquired from the job configuration or from a custom data base.
 
 The last step transforms the physics information, electrons and photons,
 into digitized detector response, including the simulation of
 electronics noise and shaping. This is typically implemented with
-experiment-specific code.
+experiment-specific code, and separately for each detector type.
 
-\subsection{Reconstruction}\label{reconstruction}
 
-The reconstruction phase provides standard physics objects to describe
+\subsection{Reconstruction workflow}
+\label{ssec:Workflows:Reconstruction}
+
+The reconstruction phase produces standard physics objects to describe
 the physics event. Reconstruction delivers objects with different level
 of sophistication and from different steps, as for example hits
 describing localized charge deposition as detected on a wire, down to a
 complete hierarchy of three-dimensional tracks. These objects are handed
 over for further analysis.
-
 \begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{figures/LArSoftReconstructionGraph.pdf}
-\caption{\label{fig:LArSoftReconstruction}LArSoft ``traditional''
-reconstruction flow}
+  \centering
+  \includegraphics[width=\textwidth]{figures/LArSoftReconstructionGraph.pdf}
+  \caption{\label{fig:LArSoftReconstruction}A typical LArSoft reconstruction flow.}
 \end{figure}
+Through the workflow, detector and data acquisition parameters
+can be acquired from Experiment data bases.
 
 Starting from detector response, either real or simulated, there are
-many possible patterns of analysis. The more ``traditional'' one (fig.
-\ref{fig:LArSoftReconstruction}) starts with the calibration of the
-signals, attempting to suppress noise and revert electronics
-distortions, and then it proceeds with the reconstruction of charge
-deposition on a single TPC wire (\emph{hits}), to \emph{cluster} them in
-groups lying on the same wire plane, and finally with combining clusters
-from different planes in trajectories (\emph{tracks}) and particle
-cascades (\emph{showers}), connected by interaction points
-(\emph{vertices}). The hierarchal connection between them is called a
-\emph{particle flow}. Many options are implemented in LArSoft for each
-of these steps, that are interchangeable as they use the same input and
-output classes.
-
-During any of these steps the detector and data acquisition parameters
-can be acquired from experiment data bases.
-
+many possible patterns of analysis. The more ``traditional'' one \cref{fig:LArSoftReconstruction}) proceeds through:
+\begin{enumerate}
+  \item calibration of the signals, noise suppression and removal of electronics distortions;
+  \item independent reconstruction of charge deposition on each TPC wire (\emph{hits});
+  \item definition of \emph{clusters} from hits lying on the same wire plane;
+  \item combination of clusters from different planes in trajectories (\emph{tracks}) and particle cascades (\emph{showers});
+  \item identification of interaction points (\emph{vertices});
+  \item hierarchal connection of them into \emph{particle flow} structures. Many options are implemented in LArSoft for each.
+\end{enumerate}
+Different algorithms can be chosen to perform each of these steps.
 Any external library that utilizes LArSoft data classes to receive
 inputs and deliver results is also fully interchangeable with the
 algorithms implemented in LArSoft. A noticeable example is the
@@ -128,7 +113,35 @@ algorithms implemented in LArSoft. A noticeable example is the
 input and can present its results in the form of LArSoft clusters,
 tracks and particle flow objects.
 
-Further common analysis steps are the calibration of the energy
-deposited in liquid argon by the interacting particles and their
-identification as specific types (e.g., muons, protons, etc.).
+Alternative workflows can and have been developed.
+For example, a derivation of the workflow described above consists in a complete
+first pass tuned to the reconstruction and subsequent identification of background
+objects (mostly cosmic rays), in their elimination at the level of hits,
+and a second pass tuned for reconstruction of neutrino interactions.
 
+Other approaches include direct track reconstruction without clustering,
+direct clustering from calibrated or uncalibrated channel signals
+by image processing algorithms, bypassing the construction of hits, and more.
+
+LArSoft and \ART modularity allows to arrange for acyclic workflows
+with any predetermined number of (potentially optional) steps.
+It does not accommodate cyclic workflows.
+
+
+\subsection{Analysis workflow}
+\label{ssec:Workflows:Analysis}
+
+Analysis workflows are the most vaguely defined,
+due in part to the more diverse goals,
+and partly to the fact that in this relatively early stage the Experiments
+have devoted most of the time to simulation and reconstruction.
+
+The calibration of energy deposited in liquid argon by interacting particles
+and their identification as specific types (\eg, muons, protons, etc.)
+have been classified sometimes as ``analysis'', sometimes as ``reconstruction''.
+Another common analysis task is evaluation of reconstruction performances
+and comparison between different algorithms and strategies.
+
+Calibration activities, for example pedestal analysis,
+characterization of argon purity, mapping of the electric field,
+also fall in this category and they are ideal candidates for the standardization of workflows.

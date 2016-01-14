@@ -1,0 +1,48 @@
+digraph LArSoftAndExperiments {
+  
+  rankdir = LR
+  dpi = 1200
+  
+  node [ shape=box ]
+  edge [ color=forestgreen ]
+  
+  "LArSoft"    [label="LArSoft\ntoolkit" shape=ellipse, penwidth=2.0, color=orange, fontcolor=orange]
+  
+  
+  subgraph cluster_development {
+    style = dashed
+    color = forestgreen
+    fontcolor = forestgreen
+    fontsize  = 8
+    label     = "experiment-specific software"
+    
+    node [
+      fontsize  = 10
+      shape     = box
+      color     = forestgreen
+      fontcolor = forestgreen
+    ]
+    edge [
+      color     = forestgreen
+    ]
+    
+    "ExperimentGeometry"      [label="detector\ngeometry",   ]
+    "ExperimentConditions"    [label="detector\nconditions", ]
+    "ExperimentData"          [label="data\nacquisition",    ]
+    "ExperimentServices"      [label="services",             ]
+    "ExperimentAlgorithms"    [label="algorithms",           ]
+    "ExperimentConfiguration" [label="job\nconfiguration",   ]
+    "ExperimentWorkFlow"      [label="workflows",            ]
+    
+  } // subgraph cluster_development
+  
+  "LArSoft" -> "ExperimentGeometry"      [dir=none]
+  "LArSoft" -> "ExperimentConditions"    [dir=none]
+  "LArSoft" -> "ExperimentData"          [dir=none]
+  "LArSoft" -> "ExperimentServices"      [dir=none]
+  "LArSoft" -> "ExperimentAlgorithms"    [dir=none]
+  "LArSoft" -> "ExperimentConfiguration" [dir=none]
+  "LArSoft" -> "ExperimentWorkFlow"      [dir=none]
+  
+} // LArSoftAndExperiments
+

@@ -8,59 +8,142 @@
 %
 
 To provide the best solutions for LAr TPC simulation, reconstruction and
-analysis of data, LArSoft provides a collection of built in tools and
-algorithms, but also interfaces to other existing libraries.
-\Cref{fig:LArSoftRelations} illustrates the relation between LArSoft and
-these libraries.
-
+analysis of data, LArSoft interacts with other software aimed to
+provide developers with tools commonly in use by the broader physics community,
+standardize code development,
+and allow for experiment-specific needs (\cref{fig:LArSoftRelations}).
 \begin{figure}
-	\includegraphics[width=\textwidth]{figures/LArSoftEnvironmentFull}
+	\centering
+	\includegraphics[width=0.8\textwidth]{figures/LArSoftEnvironment}
 	\caption{\label{fig:LArSoftRelations}
-		Relationship between LArSoft and other packages and libraries.
+		Relationship of LArSoft with other software categories.
 	}
 \end{figure}
 
-LArSoft is designed to rely on the \ART framework~\cite{ART}.
-This framework provides an event data model, centralized configuration, data
-and configuration persistency, management of user algorithm through
-``modules'', exception handling, and more. LArSoft takes advantage of
-the libraries \ART framework depends on, by using them directly:
+Physics developers typically rely on copious libraries providing general or physics-specific services
+(\cref{fig:LArSoftRelations:Libraries}).
+LArSoft already offers:
 \begin{itemize}
-\item
-  FHiCL language~\cite{FHiCL} to propagate the configuration to its
-  components
-\item
-  message facility~\cite{MessageFacility} to regulate text output to console
-\item
-  CLHEP, ROOT, Boost libraries as needed
+	\item access to a framework, \ART~\cite{ART}, providing essential functionalities
+		including an event data model, an event loop, workflow definition and control,
+		plug-in of code, distribution and tracking of job configuration,
+		serialization of the results, and more
+	\item proxy-, web-based access to data bases via \libwda~\cite{libwda},
+		or direct access to \PostgreSQL databases\footnote{%
+		Experience has shown that direct database does not scale well with the number of accessing jobs.%
+		}
+	\item physics libraries, as CERN \CLHEP and \nutools~\cite{nutools}
+	\item event generation packages: \GENIE~\cite{GENIE}, \CRY~\cite{CRY}, HEPEVT files
+	\item GEANT4~\cite{GEANT}, the detector simulation library
+	\item pattern recognition libraries, like \Pandora
+	\item data analysis tools, like CERN \ROOT~\cite{ROOT}
+	\item visualization aids, also with CERN \ROOT and \nutools
 \end{itemize}
+\begin{figure}
+	% TODO align the two sides;
+	% 
+	% \newsavebox{\tempbox}
+	% \sbox{\tempbox{\includegraphics{large figure}}}
+	% \subfloat{\label{...}\usebox{\tempbox}}
+	% \subfloat{\label{...}\vbox to \ht\tempbox{\vfil\includegraphics{small figure}\vfil}}
+	% 
+	\subfloat{
+		\label{fig:LArSoftRelations:Libraries}
+		\includegraphics[scale=0.04,trim=500 500 500 500]{figures/LArSoftAndLibraries}
+	}
+	\subfloat{
+		\label{fig:LArSoftRelations:Experiments}
+		\includegraphics[scale=0.04,trim=500 500 500 500]{figures/LArSoftAndExperiments}
+	}
+	\caption{\label{fig:LArSoftRelationsI}
+		Relationship between LArSoft and \protect\subref{fig:LArSoftRelations:Libraries} third-party libraries and \protect\subref{fig:LArSoftRelations:Experiments} experiment-specific software.
+	}
+\end{figure}
 
-LArSoft also shares a common platform, \emph{nutools}~\cite{nutools}, with
-other neutrino experiments (\NOvA). This library provides LArSoft with
-some basic event display facilities and simulation data structures.
-
-LArSoft interactions include:
-
+LArSoft also needs to accommodate specific needs from the experiments.
+Experiments directly contribute LArSoft content when it's suitable, that is,
+of general utility and experiment-agnostic.
+In the other cases, experiments interface to LArSoft though many channels
+(\cref{fig:LArSoftRelations:Experiments}):
 \begin{itemize}
-\item
-  experiment detector data, through customized input modules converting
-  data into LArSoft data classes
-\item
-  external event generators (e.g., CRY~\cite{CRY}, GENIE~\cite{GENIE}, via
-  API or through HEPEVT exchange format; additional event generators are
-  natively implemented in LArSoft
-\item
-  GEANT~\cite{GEANT}, an external detector simulation library
-\item
-  data bases, via direct connection or web proxy (\emph{libwda}~\cite{libwda})
-\item
-  external reconstruction tools (e.g., \emph{pandora}~\cite{pandora}), through a
-  LArSoft interface
-\item
-  custom analysis tools, that can use LArSoft data classes directly or
-  tailored data formats produced by custom LArSoft modules
-\item
-  experiment code, written in the form of LArSoft algorithms, modules
-  and services
+	\item detector geometry is provided in GDML or ROOT format
+	\item detector conditions can be learned via static configuration or from experiment databases
+	\item detector data is acquired by special \ART modules or by standard \ART files (e.g., produced by \ARTDAQ) containing standard LArSoft data products
+	\item specialized services and algorithms can be plugged in using the \ART framework
+	\item job configuration, controlling the data to be processed and the sequence of actions to perform,
+		is specified in \FHiCL language
+	\item workflows are defined by the experiment, typically by using custom scripts that include the execution of LArSoft main program
 \end{itemize}
+\begin{figure}
+	\centering\includegraphics[scale=0.04]{figures/LArSoftAndDevelopment}
+	\caption{\label{fig:LArSoftRelations:Development}
+		Relationship between LArSoft and development software categories.
+	}
+\end{figure}
 
+LArSoft has a large number of interdependent components,
+and provides the users tools to facilitate code development (\cref{fig:LArSoftRelations:Development}).
+LArSoft code is organized in repositories that can be compiled when needed.
+A building system ensuring builds consistent among all supported platforms is employed.
+The \UPS~\cite{UPS} distribution system ensures that the same consistency is preserved at run time.
+Infrastructure for automatic execution of user tests is also provided,
+together with a growing number of tests exercising parts of LArSoft tools.
+
+
+
+\subsection{Internal components}
+\label{ssec:Components}
+
+Most LArSoft components can be grouped into some broad functional categories.
+Some of them are well established, while others are being developed now or have been just designed.
+The following list touches the main ones, without being exhaustive:
+% \begin{itemize}
+% 	\item physical constants
+% 	\item helpers for common framework usage patterns (\eg, creation of asociations between data products)
+% 	\item detector geometry description
+% 	\item persistent data structures (``data products'')
+% 	\item detector information services: liquid argon and detector properties, detector clocks, readout channel quality
+% 	\item calibration services: readout channel pedestals
+% 	\item physics event generation
+% 	\item detector simulation: TPC and optical detectors
+% 	\item readout simulation: template modules for TPC and optical detectors
+% 	\item simulation of optical triggers
+% 	\item calibration: template modules, description of residual electric charge in TPC volume
+% 	\item object reconstruction: 1D (TPC wire hits, optical hits), 2D (TPC hit clusters), 3D (tracks, showers, vertices) and time (optical flashes)
+% 	\item TPC hit simulation and correlation between reconstructed objects and generated particles
+% 	\item energy and momentum reconstruction (``calorimetry'')
+% 	\item particle identification
+% 	\item global event reconstruction
+% 	\item graphical display of generated and reconstructed objects (``event display'')
+% 	\item analyser module example
+% \end{itemize}
+\begin{description}
+	\item[detector information] \mbox{} % make it start a new line
+		\begin{itemize}
+			\item detector geometry description
+			\item detector information services: liquid argon and detector properties, detector clocks, readout channel quality
+			\item calibration services: readout channel pedestals
+			\item map of residual electric charge in TPC volume
+		\end{itemize}
+	\item[persistent data structures] (``data products'')
+	\item[operations] \mbox{} % make it start a new line
+		\begin{itemize}
+			\item physics event generation
+			\item detector simulation: TPC and optical detectors
+			\item readout simulation: template modules for TPC and optical detectors
+			\item simulation of optical triggers
+			\item calibration template modules
+			\item object reconstruction: 1D (TPC wire hits, optical hits), 2D (TPC hit clusters), 3D (tracks, showers, vertices) and time (optical flashes)
+			\item TPC hit simulation and correlation between reconstructed objects and generated particles
+			\item energy and momentum reconstruction (``calorimetry'')
+			\item particle identification
+			\item global event reconstruction
+		\end{itemize}
+	\item[programming utilities] and framework interface
+		\begin{itemize}
+			\item physical constants
+			\item helpers for common framework usage patterns (\eg, creation of asociations between data products)
+		\end{itemize}
+	\item[graphical display] of generated and reconstructed objects (``event display'')
+	\item[example] of analyser module
+\end{description}
