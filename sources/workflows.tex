@@ -2,18 +2,19 @@
 % \label{sec:Workflows}
 
 LArSoft's tools can be sequenced and combined to compound complete workflows.
-The typical usage is aligned to three main types of ``standard'' workflows (\cref{fig:LArSoftProcessingChain}):
+The typical usage is aligned to three main types of ``standard'' workflows: % (\cref{fig:LArSoftProcessingChain}):
 \begin{enumerate}
   \item simulation
   \item reconstruction
   \item analysis
 \end{enumerate}
 where the first step, simulation, is of course skipped when processing real detector data.
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=\textwidth]{figures/LArSoftWorkflows.pdf}
-  \caption{\label{fig:LArSoftProcessingChain}Typical workflow sequence in liquid argon TPC analysis. Each block represents a workflow.}
-\end{figure}
+% \begin{figure}[htbp]
+%   \centering
+%   \includegraphics[width=\textwidth]{figures/LArSoftWorkflows.pdf}
+%   \caption{\label{fig:LArSoftProcessingChain}Typical workflow sequence in liquid argon TPC analysis. Each block represents a workflow.}
+%   % REMOVE DIAGRAM
+% \end{figure}
 LArSoft does not directly define these processing chains.
 Rather, it inherits the flexibility from the \emph{art} framework,
 which provides users with the flexibility of choosing and arranging
@@ -42,7 +43,7 @@ The main results of this workflow are:
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{figures/LArSoftSimulationGraph.pdf}
+  \includegraphics{figures/LArSoftSimulationWorkflow.pdf}
   \caption{\label{fig:LArSoftSimulation}A typical LArSoft simulation workflow.}
 \end{figure}
 The complete simulation chain is summarized in \cref{fig:LArSoftSimulation}.
@@ -89,7 +90,7 @@ complete hierarchy of three-dimensional tracks. These objects are handed
 over for further analysis.
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=\textwidth]{figures/LArSoftReconstructionGraph.pdf}
+  \includegraphics{figures/LArSoftReconstructionWorkflow.pdf}
   \caption{\label{fig:LArSoftReconstruction}A typical LArSoft reconstruction flow.}
 \end{figure}
 Through the workflow, detector and data acquisition parameters
