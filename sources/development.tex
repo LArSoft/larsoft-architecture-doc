@@ -140,8 +140,12 @@ and to integrate them into LArSoft itself.
 
 \begin{figure}
    \centering
-   \includegraphics[width=\textwidth]{figures/LArSoftSimplifiedFactorizationModel.pdf}
-   \caption{\label{fig:AlgorithmModel}LArSoft algorithm and service model}
+   \includegraphics{figures/LArSoftFactorizationModelAndTests.pdf}
+   \caption{\label{fig:AlgorithmModel}LArSoft algorithm and service model.
+      Black lines represent ownership.
+      The coloured lines show the path the algorithm obtains the provider through.
+      Both service providers and algorithms can be tested without involving the full framework.
+   }
 \end{figure}
 
 The preferred model for algorithm structure is represented in \cref{fig:AlgorithmModel}.
@@ -184,56 +188,46 @@ Since algorithms often rely on services, the services also need to
 follow the same factorization model and be split in:
 
 \begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\item
-  a \emph{service provider}, in the form of a class that:
+   \item
+      a \emph{service provider}, in the form of a class that:
+      \begin{itemize}
+         \item
+            is configurable with FHiCL parameter sets
+         \item
+            has the minimal convenient set of dependencies
+         \item
+            provides the actual functionalities
+      \end{itemize}
+   \item
+      a service for the \emph{art} framework, that:
+      \begin{itemize}
+         \item
+            owns and manages the lifetime of its service provider
+         \item
+            provides modules with a pointer to the provider
+         \item
+            when relevant, propagates messages from the framework (e.g., the
+            beginning of a new run) to the provider
+      \end{itemize}
 \end{enumerate}
-
-\begin{itemize}
-\item
-  is configurable with FHiCL parameter sets
-\item
-  has the minimal convenient set of dependencies
-\item
-  provides the actual functionalities
-\end{itemize}
-
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\setcounter{enumi}{1}
-\item
-  a service for the \emph{art} framework, that:
-\end{enumerate}
-
-\begin{itemize}
-\item
-  owns and manages the lifetime of its service provider
-\item
-  provides modules with a pointer to the provider
-\item
-  when relevant, propagates messages from the framework (e.g., the
-  beginning of a new run) to the provider
-\end{itemize}
-
 The module is also responsible of communicating to its algorithms which
 service providers to use. Algorithms exclusively interact with service
-providers rather than with \emph{art} services.
+providers rather than with \ART services.
 
 Other important guidelines for the development of algorithms are:
 
-\begin{itemize}
-\item
-  interoperability: they should document their assumptions in detail,
-  and correctly perform on any detector if possible
-\item
-  modularity: each algorithm should perform a single task; complex tasks
-  can be performed by hierarchies of algorithms
-\item
-  maintainability: they should come with complete documentation and
-  proper tests
-\end{itemize}
+\begin{description}
+   \item[interoperability]
+      they should document their assumptions in detail,
+     and correctly perform on any detector if possible
+   \item[modularity]
+      each algorithm should perform a single task;
+      complex tasks can be performed by hierarchies of algorithms
+   \item[maintainability]
+      they should come with complete documentation and proper tests
+\end{description}
 
-Figure \ref{fig:AlgorithmModel} shows that if algorithms are not
+\Cref{fig:AlgorithmModel} shows that if algorithms are not
 framework-dependent, their unit test can also be framework-independent.
 Therefore, not only those algorithms can be developed in a simplified,
 framework-unaware environment, but they can also be tested in that same
@@ -245,7 +239,7 @@ environment.
 
 We call ``external'' any library that does not depend on LArSoft, with
 the possible exception of its data products. Examples in this category
-are GENIE, GEANT4, and \emph{pandora}.
+are \GENIE, \GEANT, and \Pandora.
 
 \begin{figure}[htbp]
 \centering
@@ -255,7 +249,7 @@ an external library}
 \end{figure}
 
 LArSoft's modularity can accommodate contributions from external
-libraries into its workflow (fig. \ref{fig:LArSoftAndExternals}). The
+libraries into its workflow (\cref{fig:LArSoftAndExternals}). The
 preferred way is to use directly the external library via its interface.
 This requires an additional interface module between LArSoft and the
 library, in charge of converting the LArSoft data products into a format
@@ -267,15 +261,15 @@ products.
 \centering
 \includegraphics[width=\textwidth]{figures/LArSoftAndPandora.pdf}
 \caption{\label{fig:LArSoftAndPandora}Interaction between LArSoft and
-\emph{pandora}}
+\Pandora}
 \end{figure}
 
 This is exemplified in the interaction between LArSoft and
-\emph{pandora} (fig. \ref{fig:LArSoftAndPandora}): \emph{pandora} uses
+\Pandora (\cref{fig:LArSoftAndPandora}): \Pandora uses
 its own data classes for input hits, particle flow results and geometry
 specification. A base module exists that reads LArSoft hits, converts
-them into \emph{pandora}'s, translates geometry information, and
-recreates out of \emph{pandora} particle flow objects LArSoft clusters,
+them into \Pandora's, translates geometry information, and
+recreates out of \Pandora particle flow objects LArSoft clusters,
 tracks, vertices, and more.
 
 This approach has relevant advantages: it can be fairly fast; it allows
