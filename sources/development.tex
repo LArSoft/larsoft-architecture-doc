@@ -2,17 +2,21 @@
 % \label{sec:Development}
 
 The extensibility of LArSoft is largely based on the underlying
-framework, \ART. The \ART framework processes physics event
-independently, executing on each of them a sequence of modules.
-The framework also provides a list of global ``services'' that modules can rely on.
+framework, \ART. The \ART framework processes physics \emph{event}
+independently, executing on each of them a sequence of \emph{modules}.
+An event is defined by an input module.
+In most Experiments it is bound to a single pulsed beam interaction with the detector,
+but test beam Experiments, non-beam Experiments and non-beam analyses (\eg proton decay)
+may need to define different event boundaries.
+The framework also provides a list of global \emph{services} that modules can rely on.
 Examples of services implemented by LArSoft include
 the description of detector geometry and channel mapping,
 the set of detector configuration parameters,
 and access to TPC channel quality information.
 
 In this section we describe the development environment
-and then focus on the main handles LArSoft offers developers in terms of extensibility,
-including new persistable data structures, new algorithms
+and then focus on the main handles LArSoft offers developers for the sake of extensibility,
+including new serializable data structures, new algorithms
 and the use of external libraries.
 
 
@@ -24,13 +28,13 @@ LArSoft is designed for and supports the use of a development environment based 
    \item UNIX Product Support (\UPS) for access to dependent packages
    \item \cetbuildtools\cite{cetbuildtools} as build system
    \item Multi-Repository Build\cite{MRB} (\MRB)  to coordinate build and execute software from different repositories
-   \item source code repositories under \git (recommended) or \SVN
+   \item \git (recommended) or \SVN for version control
 \end{itemize}
 
 LArSoft is fully supported on the following platforms:
 \begin{itemize}
    \item Scientific Linux Fermi: version 6
-   \item Darwin: version 13 (OS X 10.9 ``Maverick'') and 14 (OS X 10.10, ``Yosemite'')
+   \item Darwin: version 13 (OS X 10.9 ``Maverick'') and 14 (OS X 10.10 ``Yosemite'')
 \end{itemize}
 LArSoft typically supports the two most recent versions of these operating systems\footnote{
 The actual supported versions depend also on the underlying support of the O.S. by Fermilab.
@@ -40,7 +44,7 @@ Support is also planned for the long term support release of Ubuntu Linux (16.04
 A typical workflow starts with the set up of a working area.
 After the area is created, subsequent utilization of it requires just a simple set up.
 LArSoft provides a script for this set up,
-and it is common practise for the Experiments to provide customized ones.
+and it is common practice for the Experiments to provide customized ones.
 
 The development, whether it is creation of new code or modification of existing one,
 follows the following workflow:
@@ -94,10 +98,10 @@ automatically and periodically run.
 \subsection{Data products}
 \label{ssec:Development:DataProducts}
 
-LArSoft provides a basic set of persistable data classes.
+LArSoft provides a basic set of serializable data classes.
 Each class is associated to a simple concept and a set of related quantities.
 For example, \texttt{raw::RawDigit} describes the raw data as read from a TPC channel;
-\texttt{recob::Cluster} describes a set of hits observed on a wire plane;
+\texttt{recob::Cluster} describes a set of correlated hits observed on a wire plane;
 \texttt{anab::Calorimetry} contains information about calibrated energy of a track.
 
 A \emph{data product} is a class that:
@@ -143,8 +147,10 @@ and to integrate them into LArSoft itself.
    \includegraphics{figures/LArSoftFactorizationModelAndTests.pdf}
    \caption{\label{fig:AlgorithmModel}LArSoft algorithm and service model.
       Black lines represent ownership.
-      The coloured lines show the path the algorithm obtains the provider through.
-      Both service providers and algorithms can be tested without involving the full framework.
+      The coloured arrows show the path the algorithm obtains the provider through.
+      The green line contours the standard execution environment.
+      Dotted lines describe testing environments:
+      both service providers and algorithms can be tested without involving the full framework.
    }
 \end{figure}
 
@@ -196,7 +202,7 @@ follow the same factorization model and be split in:
          \item
             has the minimal convenient set of dependencies
          \item
-            provides the actual functionalities
+            provides actual functionality
       \end{itemize}
    \item
       a service for the \emph{art} framework, that:
@@ -206,8 +212,8 @@ follow the same factorization model and be split in:
          \item
             provides modules with a pointer to the provider
          \item
-            when relevant, propagates messages from the framework (e.g., the
-            beginning of a new run) to the provider
+            when relevant, reacts to messages from the framework (e.g., the
+            beginning of a new run) and propagates them to the provider as needed
       \end{itemize}
 \end{enumerate}
 The module is also responsible of communicating to its algorithms which
@@ -241,11 +247,12 @@ We call ``external'' any library that does not depend on LArSoft, with
 the possible exception of its data products. Examples in this category
 are \GENIE, \GEANT, and \Pandora.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{figures/LArSoftAndExternals.pdf}
-\caption{\label{fig:LArSoftAndExternals}Interaction between LArSoft and
-an external library}
+\begin{figure}
+   \centering
+   \includegraphics[width=\textwidth]{figures/LArSoftAndExternals.pdf}
+   \caption{\label{fig:LArSoftAndExternals}
+      Interaction between LArSoft and an external library.
+   }
 \end{figure}
 
 LArSoft's modularity can accommodate contributions from external
@@ -257,11 +264,12 @@ digestible by the external library, configuring and driving it, and
 extracting and converting the results into a set of LArSoft data
 products.
 
-\begin{figure}[htbp]
-\centering
-\includegraphics[width=\textwidth]{figures/LArSoftAndPandora.pdf}
-\caption{\label{fig:LArSoftAndPandora}Interaction between LArSoft and
-\Pandora}
+\begin{figure}
+   \centering
+   \includegraphics[width=\textwidth]{figures/LArSoftAndPandora.pdf}
+   \caption{\label{fig:LArSoftAndPandora}
+      Interaction between LArSoft and \Pandora
+   }
 \end{figure}
 
 This is exemplified in the interaction between LArSoft and
