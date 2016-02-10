@@ -30,6 +30,7 @@ LArSoft is designed for and supports the use of a development environment based 
    \item Multi-Repository Build\cite{MRB} (\MRB)  to coordinate build and execute software from different repositories
    \item \git (recommended) or \SVN for version control
 \end{itemize}
+The following description assumes the prerequisite availability of all these tools.
 
 LArSoft is fully supported on the following platforms:
 \begin{itemize}
@@ -42,29 +43,32 @@ The actual supported versions depend also on the underlying support of the O.S. 
 Support is also planned for the long term support release of Ubuntu Linux (16.04 LTS).
 
 A typical workflow starts with the set up of a working area.
-After the area is created, subsequent utilization of it requires just a simple set up.
+After the area is created the first time, subsequent utilization of it requires just a simple set up.
 LArSoft provides a script for this set up,
 and it is common practice for the Experiments to provide customized ones.
 
 The development, whether it is creation of new code or modification of existing one,
 follows the following workflow:
 \begin{enumerate}
-   \item development-specific set up of the existing working area
+   \item \emph{development-specific set up} of the existing working area
    \item importing the source code to be modified, if any; this code will persist in the area
    \item modifications as needed
    \item building
-   \item optional (and recommended) run of a standard test suite
+   \item optional (and recommended) execution of a standard test suite
    \item installation for running
 \end{enumerate}
 
 The execution of LArSoft code including user development, as described above,
 follows this workflow:
 \begin{enumerate}
-   \item run-time specific set up of the existing working area
+   \item \emph{run-time specific set up} of the existing working area
+   \item preparation of job configuration as needed
    \item execution of the software
 \end{enumerate}
 The execution of LArSoft code as distributed, without modification,
-has a simpler set up that does not require a development working area.
+has a simpler set up that does not require a development working area.\\
+LArSoft and the Experiments provide a vast selection of configurations ready to run, making the second step optional.
+Development and execution set up can coexist in the same environment at the same time.
 
 LArSoft currently provides no facility to execute code remotely,
 including job submission to remote clusters.
@@ -81,18 +85,20 @@ in the code. Tests are instrumental to the early detection of such
 defects. LArSoft includes tests at two levels, called \emph{unit tests}
 and \emph{integration tests}.
 
-Unit tests exercise a limited part of the system, typically a single
-algorithm. Ideally a unit test for an algorithm should test all the
-functions of that algorithm. In practice, tests for complex algorithms
-tend to set up and test a few known typical cases.
+Unit tests exercise a limited part of the system, typically a single algorithm.
+Ideally a unit test for an algorithm should test all the functions of that algorithm.
+In practice, tests for complex algorithms tend to set up and test a few known typical cases.
+Unit tests can be added at the same time the tested code is beging developed.
+They are run in the development environment:
+as such, they are the quickest mean to exercise newly written code.
 
-Integration tests involve the framework and one or more processing
-modules. These tests can reproduce real user scenarios, for example a
-part of the official processing chain of an experiment, and they can
-compare new and historical results. LArSoft tools allow these tests to
-be run at any time, and a standard suite of tests is meant to be
-automatically and periodically run.
-
+Integration tests involve the framework and one or more processing modules.
+These tests can reproduce real user scenarios,
+for example a part of the official processing chain of an Experiment,
+and they can compare new and historical results.
+LArSoft tools allow these tests to be run on demand at any time,
+and a standard suite of tests is automatically and periodically run
+as part of LArSoft Continuous Integration system.
 
 
 \subsection{Data products}
@@ -108,7 +114,7 @@ A \emph{data product} is a class that:
 \begin{itemize}
    \item is simple: contains just data and trivial logic to access it;
       more complex elaborations belong to algorithms
-   \item contains only members from a small selected libraries:
+   \item contains only members from a small set of selected libraries:
       C++ standard library is highly recommended; ROOT classes are also accepted
    \item is not polymorphic
 \end{itemize}
@@ -116,7 +122,7 @@ A \emph{data product} is a class that:
 Limitations to ROOT I/O system impose restrictions on the types of allowed data members,
 \eg on the set of supported C++11 containers.
 Relations between data products are expressed by \emph{associations}.
-Associations are data products provided by \emph{art}
+Associations are data products provided by \ART
 which can relate a data product, or an element of it,
 to another element from another data product.
 Examples of use in LArSoft include associations between a
@@ -133,10 +139,9 @@ This allows to arbitrary split the processing chain in multiple sequences of job
 \label{ssec:Development:UserCode}
 
 Algorithms constitute, together with data products, the heart of LArSoft,
-and the ability for user to add their own algorithm is central to its design.
+and the ability for the users to add their own algorithm is central to its design.
 In fact, LArSoft algorithms differ from users' algorithms
-only in the judgment that their purpose is considered of wider interest
-than just for the single user.
+only in the consideration that their purpose is of general interest.
 Indeed, most of the algorithms in LArSoft were written by users to solve their own specific problems,
 and then adopted into the common toolkit.
 LArSoft encourages users to produce algorithms that perform correctly on \emph{any} liquid argon detector,
@@ -145,7 +150,9 @@ and to integrate them into LArSoft itself.
 \begin{figure}
    \centering
    \includegraphics{figures/LArSoftFactorizationModelAndTests}
-   \caption{\label{fig:AlgorithmModel}LArSoft algorithm and service model.
+   \caption[LArSoft algorithm and service model]{
+      \label{fig:AlgorithmModel}
+      LArSoft algorithm and service model.
       Black lines represent ownership.
       The coloured arrows show the path the algorithm obtains the provider through.
       The green line contours the standard execution environment.
@@ -154,7 +161,7 @@ and to integrate them into LArSoft itself.
    }
 \end{figure}
 
-The preferred model for algorithm structure is represented in \cref{fig:AlgorithmModel}.
+The preferred model for algorithm design is represented in \cref{fig:AlgorithmModel}.
 We refer to this as \emph{factorization} model.
 The underlying principle it is that the algorithm must be independently
 testable and portable, using the minimal set of necessary dependences.
@@ -205,7 +212,7 @@ follow the same factorization model and be split in:
             provides actual functionality
       \end{itemize}
    \item
-      a service for the \emph{art} framework, that:
+      a service for the \ART framework, that:
       \begin{itemize}
          \item
             owns and manages the lifetime of its service provider
@@ -225,7 +232,7 @@ Other important guidelines for the development of algorithms are:
 \begin{description}
    \item[interoperability]
       they should document their assumptions in detail,
-     and correctly perform on any detector if possible
+      and correctly perform on any detector if possible
    \item[modularity]
       each algorithm should perform a single task;
       complex tasks can be performed by hierarchies of algorithms
@@ -241,19 +248,13 @@ development environment. In other words, the full development cycle, of
 which testing is an integral part, can seamlessly happen in the same
 environment.
 
-\subsection{External libraries}\label{external-libraries}
+
+\subsection{External libraries}
+\label{ssec:Development:ExternalLibraries}
 
 We call ``external'' any library that does not depend on LArSoft, with
 the possible exception of its data products. Examples in this category
 are \GENIE, \GEANT, and \Pandora.
-
-\begin{figure}
-   \centering
-   \includegraphics[width=\textwidth]{figures/LArSoftAndExternals}
-   \caption{\label{fig:LArSoftAndExternals}
-      Interaction between LArSoft and an external library.
-   }
-\end{figure}
 
 LArSoft's modularity can accommodate contributions from external
 libraries into its workflow (\cref{fig:LArSoftAndExternals}). The
@@ -263,23 +264,34 @@ library, in charge of converting the LArSoft data products into a format
 digestible by the external library, configuring and driving it, and
 extracting and converting the results into a set of LArSoft data
 products.
-
 \begin{figure}
    \centering
-   \includegraphics[width=\textwidth]{figures/LArSoftAndPandora}
-   \caption{\label{fig:LArSoftAndPandora}
-      Interaction between LArSoft and \Pandora
+   \includegraphics{figures/LArSoftAndExternalLibrary}
+   \caption[Interaction between LArSoft and an external library]{
+      \label{fig:LArSoftAndExternals}
+      Interaction between LArSoft and an external library.
+      The dashed line encompasses the components belonging to LArSoft.
+      Shapes and colours are as in \cref{fig:LArSoftSimulationRelations}.
    }
 \end{figure}
 
-This is exemplified in the interaction between LArSoft and
-\Pandora (\cref{fig:LArSoftAndPandora}): \Pandora uses
+This model is exemplified in the interaction between LArSoft and
+\Pandora\cite{pandora} (\cref{fig:LArSoftAndPandora}): \Pandora uses
 its own data classes for input hits, particle flow results and geometry
 specification. A base module exists that reads LArSoft hits, converts
-them into \Pandora's, translates geometry information, and
-recreates out of \Pandora particle flow objects LArSoft clusters,
-tracks, vertices, and more.
-
+them into \Pandora's, translates geometry information,
+and LArSoft clusters, tracks, vertices, and more,
+out of \Pandora particle flow objects.
+\begin{figure}
+   \centering
+   \includegraphics{figures/LArSoftAndPandora}
+   \caption[Model of communication between LArSoft and \Pandora]{
+      \label{fig:LArSoftAndPandora}
+      LArSoft workflow including \Pandora.
+      Data structures in the \texttt{pandora} namespace are defined in \Pandora.
+      
+   }
+\end{figure}\\
 This approach has relevant advantages: it can be fairly fast; it allows
 a precise translation of information; it provides the greatest control
 on the flow within the library; it defines and tracks the configuration

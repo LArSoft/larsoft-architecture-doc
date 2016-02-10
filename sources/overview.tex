@@ -8,7 +8,7 @@
 The LArSoft toolkit aims to offer a solution for the typical data analysis scenarios
 of an experiment based on a Liquid Argon TPC detector:
 \begin{itemize}
-  \item generation of physics pseudo-events
+  \item generation of physics events
   \item simulation of physics processes in the detectors
   \item simulation of detector readout response
   \item reconstruction of low and high level physics objects
@@ -29,8 +29,9 @@ including hits on single wires suitable as starting point for a clustering algor
 and to store the results into.
 She (or he) can use the standard framework environment to write an algorithm class
 and its framework module, compile it and test it immediately on simulated data.
-The result, in a standard LArSoft data structure, can be immediately visualized in a
-event display, and improvement made to the code.
+The clusters, saved in a standard LArSoft data structure,
+can be immediately visualized in a event display,
+and adjust the code as needed for the next development iteration.
 Depending on the algorithm, the time between a code change and the
 visualization of its effect may take less than one minute.
 Finally, replacing the input with actual detector data, that uses the same format

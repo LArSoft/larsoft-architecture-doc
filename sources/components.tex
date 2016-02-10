@@ -14,7 +14,8 @@ and allow for experiment-specific needs (\cref{fig:LArSoftRelations}).
 \begin{figure}
    \centering
    \includegraphics{figures/LArSoftEnvironmentOverview}
-   \caption{\label{fig:LArSoftRelations}
+   \caption[Relationship of LArSoft with other software categories]{
+      \label{fig:LArSoftRelations}
       Relationship of LArSoft with other software categories.
    }
 \end{figure}
@@ -40,14 +41,18 @@ LArSoft already offers:
 \end{itemize}
 Additional libraries are expected to be added in the future.
 \begin{figure}
-   \centering\includegraphics{figures/LArSoftThirdPartyLibraries}
-   \caption{\label{fig:LArSoftRelations:Libraries}
+   \centering
+   \includegraphics{figures/LArSoftThirdPartyLibraries}
+   \caption[Relationship between LArSoft and third-party libraries]{
+      \label{fig:LArSoftRelations:Libraries}
       Relationship between LArSoft and third-party libraries.
    }
 \end{figure}
 \begin{figure}
-   \centering\includegraphics{figures/LArSoftExperimentSoftware}
-   \caption{\label{fig:LArSoftRelations:Experiments}
+   \centering
+   \includegraphics{figures/LArSoftExperimentSoftware}
+   \caption[Relationship between LArSoft and experiment-specific software]{
+      \label{fig:LArSoftRelations:Experiments}
       Relationship between LArSoft and experiment-specific software.
    }
 \end{figure}
@@ -68,10 +73,17 @@ In the other cases, experiments interface to LArSoft though many channels
 \end{itemize}
 \begin{figure}
    \centering\includegraphics{figures/LArSoftDevelopmentRunTime}
-   \caption{\label{fig:LArSoftRelations:Development}
+   \caption[Relationship between LArSoft and development software categories]{
+      \label{fig:LArSoftRelations:Development}
       Relationship between LArSoft and development software categories.
    }
 \end{figure}
+Experiments have control over the format of their databases.
+LArSoft provides abstract interfaces to retrieve the information needed by its algorithms,
+and at least a simple reference implementation,
+typically reading the information from configuration or from a local data file.
+The Experiments can implement these interfaces to access their databases with their specific format.
+
 
 LArSoft has a large number of interdependent components,
 and provides the users tools to facilitate code development (\cref{fig:LArSoftRelations:Development}).
