@@ -104,34 +104,56 @@ as part of LArSoft Continuous Integration system.
 \subsection{Data products}
 \label{ssec:Development:DataProducts}
 
-LArSoft provides a basic set of serializable data classes.
-Each class is associated to a simple concept and a set of related quantities.
+LArSoft provides a basic set of data structures.
+Each structure is associated to a simple concept and a set of related quantities.
 For example, \texttt{raw::RawDigit} describes the raw data as read from a TPC channel;
 \texttt{recob::Cluster} describes a set of correlated hits observed on a wire plane;
 \texttt{anab::Calorimetry} contains information about calibrated energy of a track.
-
-A \emph{data product} is a class that:
+A \emph{data product} is data that can be serialized and then recovered for further processing.
+A data product can be:
 \begin{itemize}
-   \item is simple: contains just data and trivial logic to access it;
-      more complex elaborations belong to algorithms
-   \item contains only members from a small set of selected libraries:
-      C++ standard library is highly recommended; ROOT classes are also accepted
-   \item is not polymorphic
+   \item a data structure
+   \item a collection of data structures
+   \item a set of associations between data structures
 \end{itemize}
 
-Limitations to ROOT I/O system impose restrictions on the types of allowed data members,
+LArSoft strongly recommends data structures designed for serialization to follow some standard prescriptions:
+\begin{itemize}
+   \item simple: they contain just data, and trivial logic to access it;
+      more complex elaborations belong to algorithms;
+   \item concrete: they can be instantiated;
+   \item containing data members from a restricted selection:
+      \begin{itemize}
+         \item fundamental C++ types (note that pointers are not fundamental);
+         \item other types suitable themselves as data products
+            (including collections as described below).
+      \end{itemize}
+\end{itemize}
+Limitations of the ROOT I/O system impose restrictions on the types of allowed data members,
 \eg on the set of supported C++11 containers.
+
+Collections of data structures also undergo some prescriptions:
+\begin{itemize}
+   \item when contained as member of other data products,
+      standard containers (from C++ STL) are preferred,
+      favouring fixed-size arrays and STL vectors;
+   \item when passed to the framework to be saved directly,
+      STL vectors are strongly recommended;
+   \item contained types must themselves be suitable as data products
+      (as described above).
+\end{itemize}
+
 Relations between data products are expressed by \emph{associations}.
 Associations are data products provided by \ART
-which can relate a data product, or an element of it,
-to another element from another data product.
+that can relate a data product, or an element within a collection of data products,
+to another data product or element.
 Examples of use in LArSoft include associations between a
 reconstructed hit and the calibrated signal it's reconstructed from, and
 between a cluster and all the hits that constitute it.
 
 Data products have a fundamental structural role:
 they act as messages to be exchanged between algorithms.
-As such, they are also the format in which most of the results are saved.
+As such, they are also the format in which most of the algorithm results are saved.
 This allows to arbitrary split the processing chain in multiple sequences of jobs.
 
 
@@ -176,18 +198,14 @@ and only when, needed. The model is made of two layers:
          \item
             is configurable with FHiCL parameter sets
          \item
-            consumes LArSoft data products as input
-         \item
-            produces LArSoft data products as output
-         \item
-            has the minimal convenient set of dependencies
+            prefers LArSoft data products as input and output
          \item
             elaborates a single event or part of an event at a time
       \end{itemize}
    \item
       a module for the \ART framework, that:
       \begin{itemize}
-         \item
+         \item \label{response:0202.1}
            owns and manages the lifetime of one or more algorithm classes
          \item
            provides the algorithm(s) with the configuration, the data products
@@ -196,6 +214,11 @@ and only when, needed. The model is made of two layers:
            delivers algorithm output to the \ART framework
       \end{itemize}
 \end{enumerate}
+\label{response:0203.1}
+LArSoft provides data products for many of the common concepts.
+Algorithms that deal with these concepts should consume and produce such shared data products,
+pairing them with additional, specific data structures
+when more information needs to be carried around.
 
 Since algorithms often rely on services, the services also need to
 follow the same factorization model and be split in:
@@ -224,8 +247,15 @@ follow the same factorization model and be split in:
       \end{itemize}
 \end{enumerate}
 The module is also responsible of communicating to its algorithms which
-service providers to use. Algorithms exclusively interact with service
-providers rather than with \ART services.
+service providers to use.
+\label{response:0201.1}
+The typical implementation of this pattern in the \ART framework is the following:
+the module, when setting up the algorithm (possibly on each event),
+obtains the services it needs from the framework,
+obtains the provider from each of these services,
+and uses the algorithm interface to propagate these providers to the algorithm itself.
+\label{response:0205.1}
+Algorithms exclusively interact with service providers rather than with \ART services.
 
 Other important guidelines for the development of algorithms are:
 

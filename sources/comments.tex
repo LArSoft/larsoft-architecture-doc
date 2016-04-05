@@ -1,7 +1,74 @@
 % \section*{Comments}
 % \label{comments}
 
+\subsection*{\texorpdfstring{2016/02/11, 16:36, David Adams
+\href{mailto:dladams@bnl.gov}{\nolinkurl{dladams@bnl.gov}} (``Re: LArSoft architecture document draft'')}{2016/02/11, 16:36, David Adams
+\href{mailto:dladams@bnl.gov}{\nolinkurl{dladams@bnl.gov}} (``Re: LArSoft architecture document draft'')}}
+\label{sec:comments:DavidAdams-2016-02-11}
 
+\emph{{[}Q 0201{]}}
+1. Could you please clarify how algorithms instantiate their providers? This is the blue line in \cref{fig:AlgorithmModel}.\\
+\emph{{[}A 0201.1{]}} \emph{{[}GP{]}}
+I have added text in \cref{response:0201.1}:\\
+\framebox{\parbox{\linewidth}{The typical implementation of this pattern in the \ART framework is the following: the module,
+when setting up the algorithm (possibly on each event),
+obtains the services it needs from the framework,
+obtains the provider from each of these services,
+and uses the algorithm interface to propagate these providers to the algorithm itself.
+}}
+
+\emph{{[}Q 0202{]}}
+2. And how modules instantiate their algorithms?\\
+\emph{{[}A 0202.1{]}} \emph{{[}GP{]}}
+\Cref{response:0202.1} has, first bullet, that the \ART module:\\
+\framebox{\parbox{\linewidth}{
+owns and manages the lifetime of one or more algorithm classes
+}}\\
+I feel this is enough information, as the way it does is framework-dependent,
+not prescribed and irrelevant to LArSoft itself.
+Which kind of information you would like to see?
+
+
+\emph{{[}Q 0203{]}}\label{question:0203}
+3. You require that algorithms consume and emit only data products. To me, this implies they are fairly high-level tools. Do you envision that most of the reconstruction code reside directly in the algorithms or external products such as Pandora? If not, the document should say something about how such code is organized. Can/should it reside in services, configurable utilities, non-configurable utilities or some mix?\\
+\emph{{[}A 0203.1{]}} \emph{{[}GP{]}}
+I have tried to clarify the wording in \cref{response:0202.1}.
+Algorithms should prefer LArSoft data structures when suitable.
+For example, a hit finder should not indulge in its own hit structure but rather deal with \ClassName{recob::Hit}.
+If \ClassName{recob::Hit} does not contain all the information the algorithm needs,
+it's still recommended that the algorithm uses a structure containing a \ClassName{recob::Hit} verbatim (``decorating'' the hit).\\
+In the text I did not go into algorithm ``levels''. If the new text is still misleading, that might be necessary.
+The idea is that low level algorithms that deal with concepts specific to the algorithm use whatever they need to,
+while a high level algorithm that produces clusters from hits needs to expose an interface based on \ClassName{recob::Hit} and \ClassName{recob::Cluster},
+even if internally it utilizes lower level algorithms that do not.
+
+
+\emph{{[}Q 0204{]}}
+4. You indicate that a module can hold multiple algorithms. Do we have such cases? Reading and writing data products is what a module does and so I expected a one-to-one mapping. FCL could specify any sequences. This seems like a partial step toward moving the code from algorithms to tools but with the limitation that "tools" can only receive and emit data products.\\
+\emph{{[}A 0204.1{]}} \emph{{[}GP{]}}
+I suppose the clarification on \emph{{[}Q 0203{]}} should show that a one-to-one mapping is not expected.
+An example of multiple algorithms owned by the same module \emph{might} be in signal simulation,
+where one algorithm adds signal reshaped by field response and another adds noise.
+While \ART definitely allows this to happen in sequence,
+we are probably not interested in saving the intermediate noiseless step,
+and, also important, given the chance we want to process channel by channel rather than event by event
+(this may be a less-than-ideal example since we should be considering channel correlations...).
+
+
+\emph{{[}Q 0205{]}}
+5. Is the model that that providers and algorithms are usable outside of art but services and modules are not? If so, this should be made explicit and it should be noted that this implies algorithms and providers cannot make use of services.\\
+\emph{{[}A 0205.1{]}} \emph{{[}GP{]}}
+That is the current model.
+\Cref{response:0205.1} spells out ``Algorithms exclusively interact with service providers rather than with \ART services.''.
+
+
+\emph{{[}Q 0206{]}}
+6. Do you expect algorithms to be used outside art and the testing framework? If so, what requirements are put on this alternative framework? Can it or must it be LArLite? Can and how does one read and write event data? These are important points because they motivate (or fail to motivate) the decision to complicate the SW by introducing providers and algorithms.\\
+\emph{{[}A 0206.1{]}} \emph{{[}GP{]}}
+\emph{(TODO)}
+
+
+\begin{comment}
 \subsection*{\texorpdfstring{Sunday 7:51:39, Ruth Pordes
 \href{mailto:ruth@fnal.gov}{\nolinkurl{ruth@fnal.gov}} (``Re: First
 draft of the architecture description
@@ -55,3 +122,5 @@ have added a few words also at the point Ruth specified (at the end of
 ``User code'' section). I think it would be good to add a ``test'' block
 in one of the high-level diagrams, but I can't figure out where. Or maybe we
 have to add a \emph{development model} section?
+
+\end{comment}
